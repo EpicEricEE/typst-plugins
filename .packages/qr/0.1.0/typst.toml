@@ -1,0 +1,7 @@
+[package]
+name = "qr"
+version = "0.1.0"
+entrypoint = "src/lib.typ"
+authors = ["Eric Biedert"]
+license = "Unlicense"
+description = "A QR Code generator."

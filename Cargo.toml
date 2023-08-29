@@ -1,0 +1,12 @@
+[workspace]
+members = ["base64", "hash", "qr"]
+
+[workspace.dependencies]
+wasm-minimal-protocol = { git = "https://github.com/astrale-sharp/wasm-minimal-protocol" }
+
+[profile.release]
+lto = true
+strip = true
+opt-level = 'z'
+codegen-units = 1
+panic = 'abort'

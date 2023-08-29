@@ -1,0 +1,11 @@
+[package]
+name = "qr"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+fast_qr = { version = "0.10.0", features = ["image", "svg"] }
+wasm-minimal-protocol = { workspace = true }
