@@ -13,7 +13,7 @@
 ///
 /// Returns: The QR code as an image.
 #let create(
-  format: "png",
+  format: "svg",
   width: none,
   height: none,
   alt: none,
