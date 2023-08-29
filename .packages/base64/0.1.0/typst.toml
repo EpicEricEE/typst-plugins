@@ -3,5 +3,5 @@ name = "base64"
 version = "0.1.0"
 entrypoint = "src/lib.typ"
 authors = ["Eric Biedert"]
-license = "Unlicense"
+license = "MIT"
 description = "Base64 encoding and decoding."

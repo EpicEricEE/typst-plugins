@@ -3,5 +3,5 @@ name = "hash"
 version = "0.1.0"
 entrypoint = "src/lib.typ"
 authors = ["Eric Biedert"]
-license = "Unlicense"
+license = "MIT"
 description = "Implementation of multiple hashing algorithms."
