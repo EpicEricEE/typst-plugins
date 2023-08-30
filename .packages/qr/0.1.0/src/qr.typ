@@ -10,6 +10,8 @@
 /// - fit: How the image should adjust itself to a given area.
 ///        Must be one of "cover", "contain", or "stretch".
 /// - margin: The margin around the QR code in units of modules. Default: 4.
+/// - background: The background color of the QR code. Default: white.
+/// - foreground: The foreground color of the QR code. Default: black.
 /// - data: The data to encode. Must be of type array, bytes, or string.
 ///
 /// Returns: The QR code as an image.
@@ -19,7 +21,11 @@
   height: none,
   alt: none,
   fit: none,
+
   margin: 4,
+  background: white,
+  foreground: black,
+
   data
 ) = {
   if margin == none { margin = 0 }
@@ -28,6 +34,8 @@
   // To keep things simple, we limit it to one byte.
   assert(margin <= 255, message: "margin must be less than 256")
   assert(format in ("png", "svg"), message: "format must be either \"png\" or \"svg\"")
+  assert(type(background) == "color", message: "background must be a color")
+  assert(type(foreground) == "color", message: "foreground must be a color")
 
   let args = (:)
   if width != none { args.insert("width", width) }
@@ -35,11 +43,18 @@
   if alt != none { args.insert("alt", alt) }
   if fit != none { args.insert("fit", fit) }
   
-  let data = if format == "png" {
-    lib.png(bytes(data), bytes((margin,)))
+  let qr-args = (
+    bytes(data),
+    bytes((margin,)),
+    bytes(background.rgba()),
+    bytes(foreground.rgba())
+  )
+
+  let image-data = if format == "png" {
+    lib.png(..qr-args)
   } else {
-    str(lib.svg(bytes(data), bytes((margin,))))
+    str(lib.svg(..qr-args))
   }
 
-  image.decode(data, format: format, ..args)
+  image.decode(image-data, format: format, ..args)
 }
