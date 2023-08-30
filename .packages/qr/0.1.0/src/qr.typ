@@ -32,7 +32,7 @@
 
   // We can only pass byte arrays to the WASM module.
   // To keep things simple, we limit it to one byte.
-  assert(margin <= 255, message: "margin must be less than 256")
+  assert(0 <= margin and margin <= 255, message: "margin must be between 0 and 255")
   assert(format in ("png", "svg"), message: "format must be either \"png\" or \"svg\"")
   assert(type(background) == "color", message: "background must be a color")
   assert(type(foreground) == "color", message: "foreground must be a color")
