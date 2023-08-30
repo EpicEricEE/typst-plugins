@@ -3,13 +3,14 @@
 /// Create a QR code from the given data.
 ///
 /// Arguments:
-/// - format: The format of the image. Either "png" or "svg".
+/// - format: The format of the image. Must be one of "png" or "svg". Default: "svg".
 /// - width: The width of the image.
 /// - height: The height of the image.
 /// - alt: A text describing the image.
-/// - fit: How the image should adjust itself to a given area. One of "cover", "contain", or "stretch".
+/// - fit: How the image should adjust itself to a given area.
+///        Must be one of "cover", "contain", or "stretch".
 /// - margin: The margin around the QR code in units of modules. Default: 4.
-/// - data: The data to encode.
+/// - data: The data to encode. Must be of type array, bytes, or string.
 ///
 /// Returns: The QR code as an image.
 #let create(

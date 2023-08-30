@@ -3,10 +3,10 @@
 /// Hashes the given data with the given digest.
 ///
 /// Arguments:
-/// - digest: The digest to use for hashing, one of
+/// - digest: The digest to use for hashing. Must be one of
 ///           "blake2", "blake2s", "md5", "sha1", "sha224",
 ///           "sha256", "sha384", "sha512", or "sha3".
-/// - data: The data to hash. Must be a string, array, or bytes.
+/// - data: The data to hash. Must be of type array, bytes, or string.
 ///
 /// Returns: The hashed data as bytes.
 #let hash(digest, data) = lib.hash(bytes(digest), bytes(data))
