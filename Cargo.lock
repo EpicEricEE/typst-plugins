@@ -129,8 +129,9 @@ dependencies = [
 
 [[package]]
 name = "fast_qr"
-version = "0.10.1"
-source = "git+https://github.com/EpicEricEE/fast_qr#58d0ef909768722feadce66d143d72a8d2f89f99"
+version = "0.10.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "02b09ccb5449ffa2c57933337563fb82b4e0875f031b71410c9faac0cea3d30b"
 dependencies = [
  "resvg",
 ]

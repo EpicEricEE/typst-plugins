@@ -7,5 +7,5 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-fast_qr = { git = "https://github.com/EpicEricEE/fast_qr", features = ["image", "svg"] }
+fast_qr = { version = "0.10.2", features = ["image", "svg"] }
 wasm-minimal-protocol = { workspace = true }
