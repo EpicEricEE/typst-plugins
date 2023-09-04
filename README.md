@@ -73,8 +73,8 @@ A plugin for generating QR codes (based on [`fast_qr`](https://github.com/erwanv
   
   [*Data*],        [*QR code*],
   [Hello world!],  qr("Hello world!"),
-  [Hallo Welt!],   qr("Hallo Welt!", foreground: blue),
-  [#(1, 2, 3, 4)], qr((1, 2, 3, 4), background: yellow, margin: 4),
+  [Hallo Welt!],   qr("Hallo Welt!", fill: blue),
+  [#(1, 2, 3, 4)], box(fill: yellow, qr((1, 2, 3, 4), margin: 4)),
 )
 ```
 

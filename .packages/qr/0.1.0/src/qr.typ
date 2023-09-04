@@ -10,8 +10,7 @@
 /// - fit: How the image should adjust itself to a given area.
 ///        Must be one of "cover", "contain", or "stretch".
 /// - margin: The margin around the QR code in units of modules. Default: 4.
-/// - background: The background color of the QR code. Default: white.
-/// - foreground: The foreground color of the QR code. Default: black.
+/// - fill: The color of the QR code. Default: black.
 /// - data: The data to encode. Must be of type array, bytes, or string.
 ///
 /// Returns: The QR code as an image.
@@ -23,8 +22,7 @@
   fit: none,
 
   margin: 4,
-  background: white,
-  foreground: black,
+  fill: black,
 
   data
 ) = {
@@ -34,8 +32,7 @@
   // To keep things simple, we limit it to one byte.
   assert(0 <= margin and margin <= 255, message: "margin must be between 0 and 255")
   assert(format in ("png", "svg"), message: "format must be either \"png\" or \"svg\"")
-  assert(type(background) == "color", message: "background must be a color")
-  assert(type(foreground) == "color", message: "foreground must be a color")
+  assert(type(fill) == "color", message: "fill must be a color")
 
   let args = (:)
   if width != none { args.insert("width", width) }
@@ -46,8 +43,7 @@
   let qr-args = (
     bytes(data),
     bytes((margin,)),
-    bytes(background.rgba()),
-    bytes(foreground.rgba())
+    bytes(fill.rgba())
   )
 
   let image-data = if format == "png" {
