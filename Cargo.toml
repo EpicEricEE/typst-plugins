@@ -1,5 +1,6 @@
 [workspace]
 members = ["base64", "hash", "qr"]
+resolver = "2"
 
 [workspace.dependencies]
 wasm-minimal-protocol = { git = "https://github.com/astrale-sharp/wasm-minimal-protocol" }
