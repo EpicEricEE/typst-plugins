@@ -64,17 +64,13 @@ A plugin for generating QR codes (based on [`fast_qr`](https://github.com/erwanv
 ```typ
 #import "@local/qr:0.1.0"
 
-// Remove the margin around the QR code.
-// The default margin is 4, which is the recommended value.
-#let qr = qr.create.with(margin: 0)
-
 #table(
   columns: 2,
   
   [*Data*],        [*QR code*],
-  [Hello world!],  qr("Hello world!"),
-  [Hallo Welt!],   qr("Hallo Welt!", fill: blue),
-  [#(1, 2, 3, 4)], box(fill: yellow, qr((1, 2, 3, 4), margin: 4)),
+  [Hello world!],  qr.create("Hello world!", margin: 0),
+  [Hallo Welt!],   qr.create("Hallo Welt!", fill: blue, margin: 2),
+  [#(1, 2, 3, 4)], box(fill: yellow, qr.create((1, 2, 3, 4))),
 )
 ```
 
