@@ -17,8 +17,9 @@
 /// - bytes: The bytes to convert.
 ///
 /// Returns: The hexadecimal string.
-#let hex(bytes) = {
-  str(lib.hex(bytes))
+#let hex(bytes) = for byte in array(bytes) {
+  if byte < 16 { "0" }
+  str(int(byte), base: 16)
 }
 
 #let blake2 = hash.with("blake2")

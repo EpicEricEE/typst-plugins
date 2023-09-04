@@ -1,5 +1,3 @@
-use std::fmt::Write;
-
 use digest::Digest;
 use wasm_minimal_protocol::*;
 
@@ -19,13 +17,4 @@ pub fn hash(hasher: &[u8], data: &[u8]) -> Result<Vec<u8>, String> {
         b"sha3" => Ok(sha3::Sha3_512::digest(data).to_vec()),
         _ => Err(r#"expected "blake2", "blake2s", "md5", "sha1", "sha224", "sha256", "sha384", "sha512", or "sha3""#.to_string()),
     }
-}
-
-#[wasm_func]
-pub fn hex(data: &[u8]) -> Vec<u8> {
-    let mut s = String::with_capacity(2 * data.len());
-    for byte in data {
-        write!(s, "{:02X}", byte).unwrap();
-    }
-    s.into_bytes()
 }
