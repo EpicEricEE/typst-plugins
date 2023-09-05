@@ -4,7 +4,7 @@
 ///
 /// Arguments:
 /// - number: The number to convert.
-/// - size: The size of the array. If not given, the array will be as small as possible.
+/// - size: The size of the array. If given, the array will be padded with 0s.
 ///
 /// Returns: The binary array.
 #let bin(number, size: none) = {
@@ -71,6 +71,10 @@
 }
 
 /// Decodes the given base64 string.
+///
+/// URL safe characters are automatically converted to their standard
+/// counterparts. Invalid characters are ignored. Invalid padding will
+/// cause a panic, however, padding is optional.
 ///
 /// Arguments:
 /// - string: The string to decode.
