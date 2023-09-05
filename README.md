@@ -3,8 +3,7 @@
 This repository contains my plugins for [typst](https://github.com/typst/typst).
 
 ## base64
-A plugin for encoding and decoding base64 strings (based on [`rust-base64`](https://github.com/marshallpierce/rust-base64)). The plugin
-comes with an `encode` and a `decode` method, where `encode` takes a string, an array, or a bytes object and returns a string, and `decode` takes a string and returns a bytes object. It can be used as follows:
+A plugin for encoding and decoding base64 strings. The plugin comes with an `encode` and a `decode` method, where `encode` takes a string, an array, or a bytes object and returns a string, and `decode` takes a string and returns a bytes object. The `encode` method allows setting whether the output should be padded with `=` characters (`pad` parameter), and whether URL safe characters should be used (`url` parameter). It can be used as follows:
 
 ```typ
 #import "@local/base64:0.1.0"
@@ -12,11 +11,12 @@ comes with an `encode` and a `decode` method, where `encode` takes a string, an 
 #table(
   columns: 2,
   
-  [*Decoded*],            [*Encoded*],
-  [Hello world!],         raw(base64.encode("Hello world!")),
-  raw("SGFsbG8gV2VsdCE"), str(base64.decode("SGFsbG8gV2VsdCE")),
-  [#(1, 2, 3, 4)],        raw(base64.encode((1, 2, 3, 4))),
-  raw("BAMCAQ"),          [#array(base64.decode("BAMCAQ"))],
+  [*Decoded*],                           [*Encoded*],
+  [Hello world!],                        raw(base64.encode("Hello world!")),
+  str(base64.decode("SGFsbG8gV2VsdCE")), raw("SGFsbG8gV2VsdCE"),
+
+  [#(1, 2, 3, 4)],                       raw(base64.encode((1, 2, 3, 4))),
+  [#array(base64.decode("BAMCAQ"))],     raw("BAMCAQ"),          
 )
 ```
 

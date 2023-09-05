@@ -1,5 +1,5 @@
 [workspace]
-members = ["base64", "hash", "qr"]
+members = ["hash", "qr"]
 resolver = "2"
 
 [workspace.dependencies]
