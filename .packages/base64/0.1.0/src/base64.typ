@@ -1,6 +1,12 @@
 #let charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
-// Convert a number to a binary array and pad it.
+/// Convert a number to a binary array and pad it.
+///
+/// Arguments:
+/// - number: The number to convert.
+/// - size: The size of the array. If not given, the array will be as small as possible.
+///
+/// Returns: The binary array.
 #let bin(number, size: none) = {
   let result = while number > 0 {
     (calc.rem(number, 2),)
@@ -15,7 +21,12 @@
   return result.rev().flatten();
 }
 
-// Convert a binary array to a number.
+/// Convert a binary array to a number.
+///
+/// Arguments:
+/// - array: The binary array to convert.
+///
+/// Returns: The number.
 #let dec(array) = {
   array.enumerate().fold(0, (acc, (i, bit)) => {
     acc + bit * calc.pow(2, (array.len() - i - 1))
@@ -30,11 +41,7 @@
 /// - data: The data to encode. Must be of type array, bytes, or string.
 ///
 /// Returns: The encoded string.
-#let encode(
-  padding: true,
-  url: false,
-  data
-) = {
+#let encode(padding: true, url: false, data) = {
   let bytes = array(bytes(data))
   let bits = bytes.map(bin.with(size: 8)).flatten()
   let pad-amount = calc.rem(6 - calc.rem(bits.len(), 6), 6)
