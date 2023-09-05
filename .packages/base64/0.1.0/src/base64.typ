@@ -37,7 +37,11 @@
 ) = {
   let bytes = array(bytes(data))
   let bits = bytes.map(bin.with(size: 8)).flatten()
-  let pad-amount = calc.rem(bits.len(), 6)
+  let pad-amount = calc.rem(6 - calc.rem(bits.len(), 6), 6)
+
+  if bytes.len() == 0 {
+    return ""
+  }
 
   let string = for i in range(0, bits.len(), step: 6) {
     let chunk = if bits.len() >= i + 6 {
@@ -49,11 +53,11 @@
   }
 
   if padding {
-    string += range(pad-amount).map(_ => "=").join("")
+    string += range(int(pad-amount / 2)).map(_ => "=").join("")
   }
 
   if url {
-    string = string.replace("+", "-").replace("/", "_").replace("=", "%3d")
+    string = string.replace("+", "-").replace("/", "_")
   }
 
   string
@@ -66,6 +70,8 @@
 ///
 /// Returns: The decoded bytes.
 #let decode(string) = {
+  let pad-amount-given = string.codepoints().filter(c => c == "=").len()
+
   string = string
     .replace("-", "+")
     .replace("_", "/")
@@ -73,12 +79,20 @@
     .replace("=", "")
 
   let bits = string.codepoints()
-    .map(c => bin(charset.position(c), size: 6))
+    .map(c => charset.position(c))
+    .filter(n => n != none)
+    .map(bin.with(size: 6))
     .flatten()
 
   let pad-amount = calc.rem(bits.len(), 8)
   if pad-amount > 0 {
     bits = bits.slice(0, -pad-amount)
+  }
+
+  if pad-amount-given > 0 and pad-amount-given != pad-amount / 2 {
+    let expected = str(pad-amount / 2)
+    let found = str(pad-amount-given)
+    panic("invalid padding: expected " + expected + " but found " + found)
   }
 
   let byte-array = range(0, bits.len(), step: 8).map(i => {
