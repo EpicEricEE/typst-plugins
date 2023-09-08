@@ -40,6 +40,8 @@ The algorithm to use for hashing. There also exist convenience methods for each 
 #### `data` parameter
 The data to hash.
 
+---
+
 ### `hex` method
 Converts a given bytes object to a hexadecimal string.
 
@@ -49,6 +51,8 @@ hash.hex(bytes) -> string
 
 #### `bytes` parameter
 The bytes object to convert.
+
+---
 
 ### `blake2` method
 Hashes the given data using the BLAKE2 algorithm.
@@ -60,6 +64,8 @@ hash.blake2(string | array | bytes) -> bytes
 #### `data` parameter
 The data to hash.
 
+---
+
 ### `blake2s` method
 Hashes the given data using the BLAKE2s algorithm.
 
@@ -69,6 +75,8 @@ hash.blake2s(string | array | bytes) -> bytes
 
 #### `data` parameter
 The data to hash.
+
+---
 
 ### `md5` method
 Hashes the given data using the MD5 algorithm.
@@ -80,6 +88,8 @@ hash.md5(string | array | bytes) -> bytes
 #### `data` parameter
 The data to hash.
 
+---
+
 ### `sha1` method
 Hashes the given data using the SHA-1 algorithm.
 
@@ -89,6 +99,8 @@ hash.sha1(string | array | bytes) -> bytes
 
 #### `data` parameter
 The data to hash.
+
+---
 
 ### `sha224` method
 Hashes the given data using the SHA-224 algorithm.
@@ -100,6 +112,8 @@ hash.sha224(string | array | bytes) -> bytes
 #### `data` parameter
 The data to hash.
 
+---
+
 ### `sha256` method
 Hashes the given data using the SHA-256 algorithm.
 
@@ -109,6 +123,8 @@ hash.sha256(string | array | bytes) -> bytes
 
 #### `data` parameter
 The data to hash.
+
+---
 
 ### `sha384` method
 Hashes the given data using the SHA-384 algorithm.
@@ -120,6 +136,8 @@ hash.sha384(string | array | bytes) -> bytes
 #### `data` parameter
 The data to hash.
 
+---
+
 ### `sha512` method
 Hashes the given data using the SHA-512 algorithm.
 
@@ -129,6 +147,8 @@ hash.sha512(string | array | bytes) -> bytes
 
 #### `data` parameter
 The data to hash.
+
+---
 
 ### `sha3` method
 Hashes the given data using the SHA-3 algorithm.

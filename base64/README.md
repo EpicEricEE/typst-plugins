@@ -23,6 +23,8 @@ Whether the output should be padded with `=` characters. Defaults to `true`.
 #### `url` parameter
 Whether URL safe characters should be used. Defaults to `false`.
 
+---
+
 ### `decode` method
 Decodes the given base64 string into a bytes object.
 
