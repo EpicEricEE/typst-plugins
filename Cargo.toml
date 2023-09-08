@@ -1,5 +1,5 @@
 [workspace]
-members = ["hash", "qr"]
+members = ["hash/bin", "qr/bin"]
 resolver = "2"
 
 [workspace.dependencies]
