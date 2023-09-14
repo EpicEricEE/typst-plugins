@@ -7,4 +7,4 @@ license = "MIT"
 description = "Base64 encoding and decoding."
 repository = "https://github.com/EpicEricEE/typst-plugins"
 compiler = "0.8.0"
-exclude = ["README.md", "assets/**"]
+exclude = ["README.md", "assets/**", "test/**"]
