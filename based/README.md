@@ -2,7 +2,7 @@
 A package for encoding and decoding in base64, base32, and base16.
 
 ## Usage
-The package comes with three submodules: `base64`, `base32`, and `base16`. All of them have an `encode` and `decode` function. The packages also provides the function aliases
+The package comes with three submodules: `base64`, `base32`, and `base16`. All of them have an `encode` and `decode` function. The package also provides the function aliases
 - `encode64` / `decode64`,
 - `encode32` / `decode32`, and
 - `encode16` / `decode16`.
