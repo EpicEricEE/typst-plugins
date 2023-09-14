@@ -4,7 +4,7 @@ This repository contains my packages for [typst](https://github.com/typst/typst)
 
 | Name | Version | Description |
 | :--- | :-----: | :---------- |
-| [base64](base64/) | 0.1.0 | A package for encoding and decoding base64 strings. |
+| [based](based/) | 0.1.0 | Encoder and decoder for base64, base32, and base16. |
 | [hash](hash/) | 0.1.0 | A package that implements a multitude of hashing algorithms. |
 | [qr](qr/) | 0.1.0 | A package for generating QR codes. |
 
