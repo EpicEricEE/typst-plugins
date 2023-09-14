@@ -39,11 +39,7 @@
 /// - pad: Whether to pad the output with "=" characters.
 ///
 /// Returns: The encoded string.
-#let encode(
-  data,
-  alphabet,
-  pad: true,
-) = {
+#let encode(data, alphabet, pad: true) = {
   let chunk-size = calc.log(alphabet.len(), base: 2)
   assert.eq(calc.fract(chunk-size), 0, message: "alphabet size must be a power of 2")
   chunk-size = int(chunk-size)
