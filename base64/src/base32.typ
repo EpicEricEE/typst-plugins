@@ -7,13 +7,13 @@
 ///
 /// Arguments:
 /// - data: The data to encode. Must be of type array, bytes, or string.
-/// - padding: Whether to pad the output with "=" characters.
+/// - pad: Whether to pad the output with "=" characters.
 /// - hex: Whether to use the extended base32hex alphabet.
 ///
 /// Returns: The encoded string.
-#let encode(data, padding: true, hex: false) = {
+#let encode(data, pad: true, hex: false) = {
     let alphabet = if hex { alphabet-32-hex } else { alphabet-32 }
-    coder.encode(data, alphabet, padding: padding)
+    coder.encode(data, alphabet, pad: pad)
 }
 
 /// Decodes the given base32 string.

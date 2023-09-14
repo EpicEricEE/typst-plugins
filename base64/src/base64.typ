@@ -7,13 +7,13 @@
 ///
 /// Arguments:
 /// - data: The data to encode. Must be of type array, bytes, or string.
-/// - padding: Whether to pad the output with "=" characters.
+/// - pad: Whether to pad the output with "=" characters.
 /// - url: Whether to use the URL safe alphabet.
 ///
 /// Returns: The encoded string.
-#let encode(data, padding: true, url: false) = {
+#let encode(data, pad: true, url: false) = {
     let alphabet = if url { alphabet-64-url } else { alphabet-64 }
-    coder.encode(data, alphabet, padding: padding)
+    coder.encode(data, alphabet, pad: pad)
 }
 
 /// Decodes the given base64 string.

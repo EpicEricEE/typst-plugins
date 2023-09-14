@@ -36,13 +36,13 @@
 /// Arguments:
 /// - data: The data to encode. Must be of type array, bytes, or string.
 /// - alphabet: The alphabet to use for encoding. Its size must be a power of 2.
-/// - padding: Whether to pad the output with "=" characters.
+/// - pad: Whether to pad the output with "=" characters.
 ///
 /// Returns: The encoded string.
 #let encode(
   data,
   alphabet,
-  padding: true,
+  pad: true,
 ) = {
   let chunk-size = calc.log(alphabet.len(), base: 2)
   assert.eq(calc.fract(chunk-size), 0, message: "alphabet size must be a power of 2")
@@ -61,7 +61,7 @@
     alphabet.at(dec(chunk))
   }
 
-  if padding {
+  if pad {
     let lcm = calc.lcm(8, chunk-size)
     let pad-amount = calc.rem(lcm - calc.rem(bits.len(), lcm), lcm)
     string += range(int(pad-amount / chunk-size)).map(_ => "=").join("")
