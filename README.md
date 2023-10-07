@@ -5,9 +5,9 @@ This repository contains my packages for [typst](https://github.com/typst/typst)
 | Name | Version | Description |
 | :--- | :-----: | :---------- |
 | [based](based/) | 0.1.0 | Encoder and decoder for base64, base32, and base16. |
-| [hash](hash/) | 0.1.0 | A package that implements a multitude of hashing algorithms. |
+| [hash](hash/) | 0.1.0 | Implementation of multiple hashing algorithms. |
 | [outex](outex/) | 0.1.0 | Outlines styled like in LaTeX. |
-| [qr](qr/) | 0.1.0 | A package for generating QR codes. |
+| [qr](qr/) | 0.1.0 | Fast QR Code generator. |
 
 ## Building
 Packages that run on top of WASM need to be built before they can be used. The package source directories already contain a symbolic link to the WASM files in the `target/wasm32-unknown-unknown/release` directory, however, they don't exist yet:
