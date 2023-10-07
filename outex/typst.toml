@@ -1,0 +1,9 @@
+[package]
+name = "outex"
+version = "0.1.0"
+entrypoint = "src/lib.typ"
+authors = ["Eric Biedert"]
+license = "MIT"
+description = "Outlines styled like in LaTeX."
+repository = "https://github.com/EpicEricEE/typst-plugins"
+exclude = ["README.md", "assets/**"]

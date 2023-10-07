@@ -6,6 +6,7 @@ This repository contains my packages for [typst](https://github.com/typst/typst)
 | :--- | :-----: | :---------- |
 | [based](based/) | 0.1.0 | Encoder and decoder for base64, base32, and base16. |
 | [hash](hash/) | 0.1.0 | A package that implements a multitude of hashing algorithms. |
+| [outex](outex/) | 0.1.0 | Outlines styled like in LaTeX. |
 | [qr](qr/) | 0.1.0 | A package for generating QR codes. |
 
 ## Building

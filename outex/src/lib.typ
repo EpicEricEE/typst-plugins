@@ -1,0 +1,1 @@
+#import "outex.typ": outex
