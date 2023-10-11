@@ -25,4 +25,4 @@ Applying this style is as simple as adding a show rule to your document. The `ou
 // ...
 ```
 
-![Example](assets/example.svg)
+![Result of example code.](assets/example.svg)
