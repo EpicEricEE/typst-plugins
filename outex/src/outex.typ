@@ -13,13 +13,13 @@
   let level = str(el.level)
   
   let number = if el.numbering != none {
-    locate(loc => numbering(el.numbering, ..counter(heading).at(el.location())))
+    numbering(el.numbering, ..counter(heading).at(el.location()))
   }
 
   let page = {
     let page-numbering = el.location().page-numbering()
     if page-numbering == none { page-numbering = "1" }
-    numbering(page-numbering, el.location().page())
+    numbering(page-numbering, ..counter(page).at(el.location()))
   }
 
   let number-width = measure(number + h(gap), styles).width
