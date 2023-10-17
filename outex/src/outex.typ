@@ -98,7 +98,10 @@
       columns: (indent, number-width, 1fr, page-width),
       [],
       number,
-      title + box(width: 1fr, pad(..fill-pad, fill)),
+      pad(
+        right: fill-pad.right,
+        title + box(width: 1fr, pad(left: fill-pad.left, fill))
+      ),
       align(bottom+end, page)
     ))
   })
@@ -154,7 +157,10 @@
       columns: (number-width, gap, 1fr, page-width),
       align(end, number),
       [],
-      title + box(width: 1fr, pad(..fill-pad, entry.fill)),
+      pad(
+        right: fill-pad.right,
+        title + box(width: 1fr, pad(left: fill-pad.left, entry.fill))
+      ),
       align(bottom+end, page)
     ))
   })
