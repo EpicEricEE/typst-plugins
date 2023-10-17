@@ -1,3 +1,30 @@
+// Repeat the given content to fill the full space.
+//
+// Parameters:
+// - gap: The gap between repeated items. (Default: none)
+// - justify: Whether to increase the gap to justify the items. (Default: false)
+//
+// Returns: The repeated content.
+#let repeat(
+  gap: none,
+  justify: false,
+  body
+) = layout(size => style(styles => {
+  let width = measure(body, styles).width
+  let amount = calc.floor((size.width + gap) / (width + gap))
+
+  let gap = if not justify { gap } else {
+    (size.width - amount * width) / (amount - 1)
+  }
+  
+  let items = ((box(body),) * amount)
+  if type(gap) == length and gap != 0pt {
+    items = items.intersperse(h(gap))
+  }
+
+  items.join()
+}))
+
 // Layout a heading entry in an outline.
 //
 // Parameters:
@@ -70,7 +97,7 @@
       columns: (indent, number-width, 1fr, page-width),
       [],
       number,
-      title + box(width: 1fr, align(end, pad(..fill-pad, fill))),
+      title + box(width: 1fr, pad(..fill-pad, fill)),
       align(bottom+end, page)
     ))
   })
@@ -126,7 +153,7 @@
       columns: (number-width, gap, 1fr, page-width),
       align(end, number),
       [],
-      title + box(width: 1fr, align(end, pad(..fill-pad, entry.fill))),
+      title + box(width: 1fr, pad(..fill-pad, entry.fill)),
       align(bottom+end, page)
     ))
   })
@@ -149,11 +176,7 @@
   space: true,
   body
 ) = {
-  set outline(fill: line(
-    start: (100%, 0%),
-    end: (0%, 0%),
-    stroke: (dash: ("dot", 6pt))
-  ))
+  set outline(fill: align(end, repeat(gap: 6pt, ".")))
 
   // Convert fill-pad to dict
   let fill-pad = if type(fill-pad) == dictionary {(

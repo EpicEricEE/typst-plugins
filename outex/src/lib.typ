@@ -1,1 +1,1 @@
-#import "outex.typ": outex
+#import "outex.typ": outex, repeat
