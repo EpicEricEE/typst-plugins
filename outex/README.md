@@ -7,7 +7,7 @@ Applying this style is as simple as adding a show rule to your document. The `ou
 | Option | Description | Default |
 | --- | --- | --- |
 | `gap` | The gap between numbering and section title | `1em` |
-| `fill-pad` | The padding around the "fill" line | `0.5em` |
+| `fill-pad` | The padding around the "fill" line | `(left: 0.5em, right: 1em)` |
 | `bold` | Whether the first-level titles should be bold | `true` |
 | `space` | Whether to add block-spacing before fist-level titles | `true` |
 
