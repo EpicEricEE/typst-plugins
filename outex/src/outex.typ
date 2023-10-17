@@ -10,8 +10,9 @@
   justify: false,
   body
 ) = layout(size => style(styles => {
+  let pt(length) = measure(h(length), styles).width
   let width = measure(body, styles).width
-  let amount = calc.floor((size.width + gap) / (width + gap))
+  let amount = calc.floor(pt(size.width + gap) / pt(width + gap))
 
   let gap = if not justify { gap } else {
     (size.width - amount * width) / (amount - 1)
@@ -163,7 +164,7 @@
 //
 // Parameters:
 // - gap: The gap between numbering and section title. (Default: 1em)
-// - fill-pad: The padding around the "fill" line. (Default: (left: 6pt, right: 1em))
+// - fill-pad: The padding around the "fill" line. (Default: (left: 0.5em, right: 1em))
 // - bold: Whether to embolden first-level section titles. (Default: true)
 // - space: Whether to add block-spacing before fist-level titles. (Default: true)
 // - body: The content to apply the template on.
@@ -171,12 +172,12 @@
 // Returns: The passed content with the styles applied.
 #let outex(
   gap: 1em,
-  fill-pad: (left: 6pt, right: 1em),
+  fill-pad: (left: 0.5em, right: 1em),
   bold: true,
   space: true,
   body
 ) = {
-  set outline(fill: align(end, repeat(gap: 6pt, ".")))
+  set outline(fill: align(end, repeat(gap: 0.5em, ".")))
 
   // Convert fill-pad to dict
   let fill-pad = if type(fill-pad) == dictionary {(
