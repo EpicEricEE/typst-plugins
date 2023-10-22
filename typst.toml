@@ -1,7 +1,7 @@
 [package]
 name = "unify"
 version = "0.4.3"
-entrypoint = "lib.typ"
+entrypoint = "src/lib.typ"
 authors = ["Christopher Hecker"]
 repository = "https://github.com/ChHecker/unify"
 license = "MIT"
