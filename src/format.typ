@@ -9,11 +9,11 @@
 // - thousandsep: The seperator between the thousands.
 #let format-float(
   f,
-  decsep: "auto",
+  decsep: auto,
   thousandsep: "thin"
 ) = {
   let string = ""
-  if decsep == "auto" {
+  if decsep == auto {
     decsep = if "," in f { "," } else{ "." }
   }
 
