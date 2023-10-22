@@ -1,4 +1,5 @@
-#import "format.typ": format-float, format-number, format-range, format-unit, format-unit-short
+#import "format/number.typ": format-float, format-number, format-range
+#import "format/unit.typ": format-unit, format-unit-short
 
 // Regex pattern for a number.
 //
