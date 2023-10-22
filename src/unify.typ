@@ -142,7 +142,7 @@
   )
 
   if raw-unit {
-    result += unit-space + unit
+    result += unit-space + " upright(" + unit + ")"
   } else {
     result += format-unit(unit, space: unit-space, per: per)
   }
@@ -229,7 +229,7 @@
   )
 
   if raw-unit {
-    result += space + unit
+    result += unit-space + " upright(" + unit + ")"
   } else {
     result += format-unit(unit, space: unitspace, per: per)
   }
