@@ -3,95 +3,159 @@
 // Formats a float with thousands separator.
 //
 // Parameters:
-// - f: Float to format.
-// - decsep: Which decimal separator to use. This must be the same as the one used in `f`.
-//           Set it to `auto` to automatically choose it. Falls back to `.`.
-// - thousandsep: The seperator between the thousands.
+// - value: The float to format.
+// - decimal-sep: The decimal separator.
+// - group-sep: The seperator between digit groups.
 #let format-float(
-  f,
-  decsep: auto,
-  thousandsep: "thin"
+  value,
+  decimal-sep: ".",
+  group-sep: "thin"
 ) = {
-  let string = ""
-  if decsep == auto {
-    decsep = if "," in f { "," } else{ "." }
-  }
+  value = str(value)
 
-  if thousandsep.trim() == "." {
-    thousandsep = ".#h(0mm)"
-  }
-
-  let split = str(f).split(decsep)
+  let split = value.split(".")
   let int-part = split.at(0)
   let dec-part = split.at(1, default: none)
+
+  let result = ""
+  
+  // Append integer part
   let int-list = int-part.clusters()
-
-  string += str(int-list.remove(0))
-  for (i, n) in int-list.enumerate() {
-    let mod = (i - int-list.len()) / 3
-    if int(mod) == mod {
-      string += " " + thousandsep + " "
+  result += int-list.remove(0)
+  for (i, digit) in int-list.enumerate() {
+    if calc.rem(int-list.len() - i, 3) == 0 {
+      result += " " + group-sep + " "
     }
-    string += str(n)
+    result += digit
   }
 
+  // Append decimal part
   if dec-part != none {
+    result += decimal-sep
+
     let dec-list = dec-part.clusters()
-    string += decsep
-    for (i, n) in dec-list.enumerate() {
-      let mod = i / 3
-      if int(mod) == mod and i != 0 {
-        string += " " + thousandsep + " "
+    for (i, digit) in dec-list.enumerate() {
+      if i != 0 and calc.rem(i, 3) == 0 {
+        result += " " + group-sep + " "
       }
-      string += str(n)
+      result += digit
     }
   }
 
-  string.replace(",", ",#h(0pt)")
+  result
+    .replace(",", ",#h(0pt)")
+    .replace(".", ".#h(0pt)")
 }
 
 // Format a number.
 //
 // Paramaters:
-// - value: Value of the number.
-// - exponent: Exponent in the exponential notation.
-// - upper: Upper uncertainty.
-// - lower: Lower uncertainty.
-// - thousandsep: The seperator between the thousands of the float.
+// - number: The number.
+// - product: The symbol to use for the exponent product.
+// - decimal-sep: The decimal separator.
+// - group-sep: The seperator between digit groups.
 #let format-number(
-  value,
-  exponent: none,
-  upper: none,
-  lower: none,
-  thousandsep: "thin"
+  number,
+  product: "dot",
+  ..format-args
 ) = {
-  let formatted-value = ""
-  if value != none {
-    formatted-value += format-float(value, thousandsep: thousandsep)
+  let format-float = format-float.with(..format-args)
+
+  let result = ""
+
+  // Append main value
+  if number.value != none {
+    result += format-float(number.value)
   }
-  if upper != none and lower != none {
-    if upper != lower {
-      formatted-value += "^(+" + format-float(upper, thousandsep: thousandsep) + ")"
-      formatted-value += "_(-" + format-float(lower, thousandsep: thousandsep) + ")"
+
+  // Append uncertainties
+  if number.upper != none and number.lower != none {
+    if number.upper != number.lower {
+      result += "^(+" + format-float(number.upper) + ")"
+      result += "_(-" + format-float(number.lower) + ")"
     } else {
-      formatted-value += " plus.minus " + format-float(upper, thousandsep: thousandsep)
+      result += " plus.minus " + format-float(number.upper)
     }
-  } else if upper != none {
-    formatted-value += " plus.minus " + format-float(upper, thousandsep: thousandsep)
-  } else if lower != none {
-    formatted-value += " plus.minus " + format-float(lower, thousandsep: thousandsep)
+  } else if number.upper != none {
+    result += " plus.minus " + format-float(number.upper)
+  } else if number.lower != none {
+    result += " plus.minus " + format-float(number.lower)
   }
-  if not (upper == none and lower == none) {
-    formatted-value = "lr((" + formatted-value
-    formatted-value += "))"
-  }
-  if exponent != none {
-    if value != none {
-      formatted-value += " dot "
+
+  if number.exponent != none {
+    // Wrap in brackets if necessary
+    if number.upper != none or number.lower != none {
+      result = "lr((" + result + "))"
     }
-    formatted-value += "10^(" + str(exponent) + ")"
+
+    // Append exponent
+    if number.value != none {
+      result += " " + product + " "
+    }
+    result += "10^(" + str(number.exponent) + ")"
   }
-  formatted-value
+
+  result
+}
+
+// Format a range.
+//
+// Parameters:
+// - lower: The upper number.
+// - upper: The lower number.
+// - product: The symbol to use for the exponent product.
+// - decimal-sep: The decimal separator.
+// - group-sep: The seperator between digit groups.
+// - delim: Symbol between the numbers.
+// - delim-space: Space between the numbers and the delimiter.
+// - force-parentheses: Whether to force parentheses around the range.
+#let format-range(
+  lower,
+  upper,
+  product: "dot",
+  decimal-sep: ".",
+  group-sep: "thin",
+  delim: "-",
+  delim-space: "thin",
+  force-parentheses: false,
+) = {
+  let format-float = format-float.with(
+    decimal-sep: decimal-sep,
+    group-sep: group-sep
+  )
+
+  let result = ""
+
+  // Append lower value (and exponent)
+  result += format-float(lower.value)
+  if lower.exponent != upper.exponent and lower.exponent != none {
+    if lower.value != none {
+      result += " " + product + " "
+    }
+    result += " 10^(" + str(lower.exponent) + ")"
+  }
+
+  // Append delimiter
+  result += " " + delim-space + " " + delim + " " + delim-space + " "
+  
+  // Append upper value (and exponent)
+  result += format-float(upper.value)
+  if lower.exponent != upper.exponent and upper.exponent != none {
+    if upper.value != none {
+      result += " " + product + " "
+    }
+    result += "10^(" + str(upper.exponent) + ")"
+  }
+
+  // Wrap in brackets and append common exponent
+  if lower.exponent == upper.exponent and lower.exponent != none {
+    result = "lr((" + result + "))"
+    result += " " + product + " 10^(" + str(lower.exponent) + ")"
+  } else if force-parentheses {
+    result = "lr((" + result + "))"
+  }
+
+  result
 }
 
 // TODO: Find out what this does
@@ -396,49 +460,4 @@
   }
 
   formatted
-}
-
-// Format a range.
-//
-// Parameters:
-// - (lower, upper): Strings containing the numbers.
-// - (exponent-lower, exponent-upper): Strings containing the exponentials in exponential notation.
-// - `delimiter`: Symbol between the numbers.
-// - `space`: Space between the numbers and the delimiter.
-// - `thousandsep`: The seperator between the thousands of the float.
-// - `force-parentheses`: Whether to force parentheses around the range.
-#let format-range(
-  lower,
-  upper, 
-  exponent-lower: none,
-  exponent-upper: none,
-  delimiter: "-",
-  space: "thin",
-  thousandsep: "thin",
-  force-parentheses: false
-) = {
-  let formatted-value = ""
-
-  formatted-value += format-float(lower, thousandsep: thousandsep)
-  if exponent-lower != exponent-upper and exponent-lower != none {
-    if lower != none {
-      formatted-value += "dot "
-    }
-    formatted-value += "10^(" + str(exponent-lower) + ")"
-  }
-  formatted-value += space + " " + delimiter + " " + space + format-float(upper, thousandsep: thousandsep)
-  if exponent-lower != exponent-upper and exponent-upper != none {
-    if upper != none {
-      formatted-value += "dot "
-    }
-    formatted-value += "10^(" + str(exponent-upper) + ")"
-  }
-  if exponent-lower == exponent-upper and (exponent-lower != none and exponent-upper != none) {
-    formatted-value = "lr((" + formatted-value
-    formatted-value += ")) dot 10^(" + str(exponent-lower) + ")"
-  } else if force-parentheses {
-    formatted-value = "lr((" + formatted-value
-    formatted-value += "))"
-  }
-  formatted-value
 }

@@ -1,60 +1,113 @@
 #import "format.typ": format-float, format-number, format-range, format-unit, format-unit-short
 
-#let re-num = regex("^(-?\d+(\.|,)?\d*)?(((\+(\d+(\.|,)?\d*)-(\d+(\.|,)?\d*)))|((((\+-)|(-\+))(\d+(\.|,)?\d*))))?(e([-\+]?\d+))?$")
+// Regex pattern for a number.
+//
+// Includes the following captures:
+// - 0: The value.
+// - 1: The upper error.
+// - 2: The lower error.
+// - 3: The combined error.
+// - 4: The exponent.
+#let number-pattern = regex({
+  "^"                                     // Start of string
+  "([\+-]?\d+\.?\d*)?"                    // Value (optional)
+  "(?:"                                   // Uncertainty (start)
+    "(?:\+(\d+\.?\d*)-(\d+\.?\d*))"       // > Upper and lower
+    "|"                                   // > or
+    "(?:(?:(?:\+-)|(?:-\+))(\d+\.?\d*))"  // > Combined
+  ")?"                                    // Uncertainty (end) (optional)
+  "(?:[eE]([-\+]?\d+))?"                  // Exponent (optional)
+  "$"                                     // End of string
+})
+
+// Parse a float-string with the above regex.
+//
+// Parameters:
+// - value: String with the number.
+//
+// Returns:
+// - value: String with the number.
+// - exponent: String with the exponent.
+// - upper: String with the upper error.
+// - lower: String with the lower error.
+#let parse-number(value) = {
+  value = value.replace(",", ".").replace(" ", "")
+
+  let match = value.match(number-pattern)
+  assert.ne(match, none, message: "invalid number: " + value)
+
+  // Assert that the given number is a valid float.
+  let validate(string) = if string != none {
+    let _ = float(string)
+    string
+  }
+
+  let (value, upper, lower, combined, exponent) = match.captures
+  
+  // If the combined error is given, use it for both upper and lower.
+  if combined != none {
+    upper = combined
+    lower = combined
+  }
+
+  // Strip leading plus signs.
+  if value != none and value.first() == "+" {
+    value = value.slice(1)
+  }
+
+  if exponent != none and exponent.first() == "+" {
+    exponent = exponent.slice(1)
+  }
+
+  (
+    value: validate(value),
+    exponent: validate(exponent),
+    upper: validate(upper),
+    lower: validate(lower)
+  )
+}
 
 // Format a number.
 //
 // Parameters:
-// - value: String with the number.
-// - thousandsep: The seperator between the thousands of the float.
+// - value: String containing the number.
+// - product: The symbol to use for the exponent product.
+// - decimal-sep: The decimal seperator.
+// - group-sep: The seperator between digit groups.
 #let num(
   value,
-  thousandsep: "thin"
+  product: "dot",
+  decimal-sep: ".",
+  group-sep: "thin"
 ) = {
-  value = str(value).replace(" ", "")//.replace(",", ".")
+  let number = parse-number(value)
 
-  let match-value = value.match(re-num)
-  assert.ne(match-value, none, message: "invalid number: " + value)
-  let captures-value = match-value.captures
-
-  let upper = none
-  let lower = none
-  if captures-value.at(14) != none {
-    upper = captures-value.at(14)
-    lower = none
-  } else {
-    upper = captures-value.at(5)
-    lower = captures-value.at(7)
-  }
-
-  let formatted = format-number(
-    captures-value.at(0),
-    exponent: captures-value.at(17),
-    upper: upper,
-    lower: lower,
-    thousandsep: thousandsep
+  let result = format-number(
+    number,
+    product: product,
+    decimal-sep: decimal-sep,
+    group-sep: group-sep
   )
 
-  formatted = "$" + formatted + "$"
-  eval(formatted)
+  result = "$" + result + "$"
+  eval(result)
 }
 
 // Format a unit.
 //
 // Parameters:
 // - unit: String containing the unit.
-// - space: Space between units.
-// - per: Whether to format the units after `per` or `/` with a fraction or exponent.
+// - unit-space: Space between units.
+// - per: How to format unit fractions.
 #let unit(
   unit,
-  space: "thin",
+  unit-space: "thin",
   per: "symbol"
 ) = {
-  let formatted-unit = ""
-  formatted-unit = format-unit(unit, space: space, per: per)
+  let result = format-unit(unit, space: unit-space, per: per)
 
-  let formatted = "$" + formatted-unit + "$"
-  eval(formatted)
+  result = "$" + result + "$"
+  eval(result)
 }
 
 // Format a quantity (i.e. number with a unit).
@@ -62,141 +115,124 @@
 // Parameters:
 // - value: String containing the number.
 // - unit: String containing the unit.
-// - rawunit: Whether to transform the unit or keep the raw string.
-// - space: Space between units.
-// - thousandsep: The seperator between the thousands of the float.
-// - per: Whether to format the units after `per` or `/` with a fraction or exponent.
+// - product: The symbol to use for the exponent product.
+// - decimal-sep: The decimal seperator.
+// - group-sep: The seperator between digit groups.
+// - raw-unit: Whether to transform the unit or keep the raw string.
+// - unit-space: Space between units.
+// - per: How to format unit fractions.
 #let qty(
   value,
   unit,
-  rawunit: false,
-  space: "thin",
-  thousandsep: "thin",
+  product: "dot",
+  decimal-sep: ".",
+  group-sep: "thin",
+  raw-unit: false,
+  unit-space: "thin",
   per: "symbol"
 ) = {
-  value = str(value).replace(" ", "")
+  let number = parse-number(value)
 
-  let match-value = value.match(re-num)
-  assert.ne(match-value, none, message: "invalid number: " + value)
-  let captures-value = match-value.captures
-
-  let upper = none
-  let lower = none
-  if captures-value.at(14) != none {
-    upper = captures-value.at(14)
-    lower = none
-  } else {
-    upper = captures-value.at(5)
-    lower = captures-value.at(7)
-  }
-
-  let formatted-value = format-number(
-    captures-value.at(0),
-    exponent: captures-value.at(17),
-    upper: upper,
-    lower: lower,
-    thousandsep: thousandsep
+  let result = format-number(
+    number,
+    product: product,
+    decimal-sep: decimal-sep,
+    group-sep: group-sep
   )
 
-  let formatted-unit = ""
-  if rawunit {
-    formatted-unit = space + unit
+  if raw-unit {
+    result += unit-space + unit
   } else {
-    formatted-unit = format-unit(unit, space: space, per: per)
+    result += format-unit(unit, space: unit-space, per: per)
   }
 
-  let formatted = "$" + formatted-value + formatted-unit + "$"
-  eval(formatted)
+  let result = "$" + result + "$"
+  eval(result)
 }
 
 // Format a range.
 //
 // Parameters:
-// - (lower, upper): Strings containing the numbers.
-// - delimiter: Symbol between the numbers.
-// - space: Space between the numbers and the delimiter.
-// - thousandsep: The seperator between the thousands of the float.
+// - lower: String containing the lower bound.
+// - upper: String containing the upper bound.
+// - product: The symbol to use for the exponent product.
+// - decimal-sep: The decimal seperator.
+// - group-sep: The seperator between digit groups.
+// - delim: Symbol between the numbers.
+// - delim-space: Space between the numbers and the delimiter.
 #let numrange(
   lower, 
   upper,
-  delimiter: "-",
-  space: "thin",
-  thousandsep: "thin"
+  product: "dot",
+  decimal-sep: ".",
+  group-sep: "thin",
+  delim: "\"to\"",
+  delim-space: "",
 ) = {
-  lower = str(lower).replace(" ", "")
-  let match-lower = lower.match(re-num)
-  assert.ne(match-lower, none, message: "invalid lower number: " + lower)
-  let captures-lower = match-lower.captures
+  let lower = parse-number(lower)
+  let upper = parse-number(upper)
 
-  upper = str(upper).replace(" ", "")
-  let match-upper = upper.match(re-num)
-  assert.ne(match-upper, none, message: "invalid upper number: " + upper)
-  let captures-upper = match-upper.captures
-
-  let formatted = format-range(
-    captures-lower.at(0),
-    captures-upper.at(0),
-    exponent-lower: captures-lower.at(17),
-    exponent-upper: captures-upper.at(17),
-    delimiter: delimiter,
-    thousandsep: thousandsep,
-    space: space,
+  let result = format-range(
+    lower,
+    upper,
+    product: product,
+    decimal-sep: decimal-sep,
+    group-sep: group-sep,
+    delim: delim,
+    delim-space: delim-space
   )
 
-  formatted = "$" + formatted + "$"
-  eval(formatted)
+  result = "$" + result + "$"
+  eval(result)
 }
 
 // Format a range with a unit.
 //
 // Parameters:
-// - (lower, upper): Strings containing the numbers.
+// - lower: String containing the lower bound.
+// - upper: String containing the upper bound.
 // - unit: String containing the unit.
-// - rawunit: Whether to transform the unit or keep the raw string.
-// - delimiter: Symbol between the numbers.
-// - space: Space between the numbers and the delimiter.
-// - unitspace: Space between units.
-// - thousandsep: The seperator between the thousands of the float.
-// - per: Whether to format the units after `per` or `/` with a fraction or exponent.
+// - product: The symbol to use for the exponent product.
+// - decimal-sep: The decimal seperator.
+// - group-sep: The seperator between digit groups.
+// - delim: Symbol between the numbers.
+// - delim-space: Space between the numbers and the delimiter.
+// - raw-unit: Whether to transform the unit or keep the raw string.
+// - unit-space: Space between units.
+// - per: How to format unit fractions.
 #let qtyrange(
   lower,
   upper,
   unit,
-  rawunit: false,
-  delimiter: "-",
-  space: "",
-  unitspace: "thin",
-  thousandsep: "thin",
+  product: "dot",
+  decimal-sep: ".",
+  group-sep: "thin",
+  delim: "\"to\"",
+  delim-space: "",
+  raw-unit: false,
+  unit-space: "thin",
   per: "symbol"
 ) = {
-  lower = str(lower).replace(" ", "")
-  let match-lower = lower.match(re-num)
-  assert.ne(match-lower, none, message: "invalid lower number: " + lower)
-  let captures-lower = match-lower.captures
+  let lower = parse-number(lower)
+  let upper = parse-number(upper)
 
-  upper = str(upper).replace(" ", "")
-  let match-upper = upper.match(re-num)
-  assert.ne(match-upper, none, message: "invalid upper number: " + upper)
-  let captures-upper = match-upper.captures
-
-  let formatted-value = format-range(
-    captures-lower.at(0),
-    captures-upper.at(0),
-    exponent-lower: captures-lower.at(17),
-    exponent-upper: captures-upper.at(17),
-    delimiter: delimiter,
-    space: space,
-    thousandsep: thousandsep,
-    force-parentheses: true
+  let result = format-range(
+    lower,
+    upper,
+    product: product,
+    decimal-sep: decimal-sep,
+    group-sep: group-sep,
+    delim: delim,
+    delim-space: delim-space,
+    force-parentheses: true,
   )
 
-  let formatted-unit = ""
-  if rawunit {
-    formatted-unit = space + unit
+  if raw-unit {
+    result += space + unit
   } else {
-    formatted-unit = format-unit(unit, space: unitspace, per: per)
+    result += format-unit(unit, space: unitspace, per: per)
   }
 
-  let formatted = "$" + formatted-value + formatted-unit + "$"
-  eval(formatted)
+  let result = "$" + result + "$"
+  eval(result)
 }
