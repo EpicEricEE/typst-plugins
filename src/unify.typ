@@ -90,8 +90,7 @@
     group-sep: group-sep
   )
 
-  result = "$" + result + "$"
-  eval(result)
+  eval(mode: "math", result)
 }
 
 // Format a unit.
@@ -105,10 +104,13 @@
   unit-space: "thin",
   per: "symbol"
 ) = {
-  let result = format-unit(unit, space: unit-space, per: per)
+  let result = format-unit(
+    unit,
+    space: unit-space,
+    per: per
+  )
 
-  result = "$" + result + "$"
-  eval(result)
+  eval(mode: "math", result)
 }
 
 // Format a quantity (i.e. number with a unit).
@@ -147,8 +149,7 @@
     result += format-unit(unit, space: unit-space, per: per)
   }
 
-  let result = "$" + result + "$"
-  eval(result)
+  eval(mode: "math", result)
 }
 
 // Format a range.
@@ -183,8 +184,7 @@
     delim-space: delim-space
   )
 
-  result = "$" + result + "$"
-  eval(result)
+  eval(mode: "math", result)
 }
 
 // Format a range with a unit.
@@ -234,6 +234,5 @@
     result += format-unit(unit, space: unitspace, per: per)
   }
 
-  let result = "$" + result + "$"
-  eval(result)
+  eval(mode: "math", result)
 }
