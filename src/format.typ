@@ -47,7 +47,7 @@
     }
   }
 
-  string
+  string.replace(",", ",#h(0pt)")
 }
 
 // Format a number.
@@ -67,19 +67,19 @@
 ) = {
   let formatted-value = ""
   if value != none {
-    formatted-value += format-float(value, thousandsep: thousandsep).replace(",", ",#h(0pt)")
+    formatted-value += format-float(value, thousandsep: thousandsep)
   }
   if upper != none and lower != none {
     if upper != lower {
       formatted-value += "^(+" + format-float(upper, thousandsep: thousandsep) + ")"
       formatted-value += "_(-" + format-float(lower, thousandsep: thousandsep) + ")"
     } else {
-      formatted-value += " plus.minus " + format-float(upper, thousandsep: thousandsep).replace(",", ",#h(0pt)")
+      formatted-value += " plus.minus " + format-float(upper, thousandsep: thousandsep)
     }
   } else if upper != none {
-    formatted-value += " plus.minus " + format-float(upper, thousandsep: thousandsep).replace(",", ",#h(0pt)")
+    formatted-value += " plus.minus " + format-float(upper, thousandsep: thousandsep)
   } else if lower != none {
-    formatted-value += " plus.minus " + format-float(lower, thousandsep: thousandsep).replace(",", ",#h(0pt)")
+    formatted-value += " plus.minus " + format-float(lower, thousandsep: thousandsep)
   }
   if not (upper == none and lower == none) {
     formatted-value = "lr((" + formatted-value
@@ -419,14 +419,14 @@
 ) = {
   let formatted-value = ""
 
-  formatted-value += format-float(lower, thousandsep: thousandsep).replace(",", ",#h(0pt)")
+  formatted-value += format-float(lower, thousandsep: thousandsep)
   if exponent-lower != exponent-upper and exponent-lower != none {
     if lower != none {
       formatted-value += "dot "
     }
     formatted-value += "10^(" + str(exponent-lower) + ")"
   }
-  formatted-value += space + " " + delimiter + " " + space + format-float(upper, thousandsep: thousandsep).replace(",", ",#h(0pt)")
+  formatted-value += space + " " + delimiter + " " + space + format-float(upper, thousandsep: thousandsep)
   if exponent-lower != exponent-upper and exponent-upper != none {
     if upper != none {
       formatted-value += "dot "
