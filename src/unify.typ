@@ -9,7 +9,7 @@
 // - thousandsep: The seperator between the thousands of the float.
 #let num(
   value,
-  thousandsep: "#h(0.166667em)"
+  thousandsep: "thin"
 ) = {
   value = str(value).replace(" ", "")//.replace(",", ".")
 
@@ -47,7 +47,7 @@
 // - per: Whether to format the units after `per` or `/` with a fraction or exponent.
 #let unit(
   unit,
-  space: "#h(0.166667em)",
+  space: "thin",
   per: "symbol"
 ) = {
   let formatted-unit = ""
@@ -70,8 +70,8 @@
   value,
   unit,
   rawunit: false,
-  space: "#h(0.166667em)",
-  thousandsep: "#h(0.166667em)",
+  space: "thin",
+  thousandsep: "thin",
   per: "symbol"
 ) = {
   value = str(value).replace(" ", "")
@@ -120,8 +120,8 @@
   lower, 
   upper,
   delimiter: "-",
-  space: "#h(0.16667em)",
-  thousandsep: "#h(0.166667em)"
+  space: "thin",
+  thousandsep: "thin"
 ) = {
   lower = str(lower).replace(" ", "")
   let match-lower = lower.match(re-num)
@@ -165,8 +165,8 @@
   rawunit: false,
   delimiter: "-",
   space: "",
-  unitspace: "#h(0.16667em)",
-  thousandsep: "#h(0.166667em)",
+  unitspace: "thin",
+  thousandsep: "thin",
   per: "symbol"
 ) = {
   lower = str(lower).replace(" ", "")

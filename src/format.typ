@@ -10,7 +10,7 @@
 #let format-float(
   f,
   decsep: "auto",
-  thousandsep: "#h(0.166667em)"
+  thousandsep: "thin"
 ) = {
   let string = ""
   if decsep == "auto" {
@@ -63,7 +63,7 @@
   exponent: none,
   upper: none,
   lower: none,
-  thousandsep: "#h(0.166667em)"
+  thousandsep: "thin"
 ) = {
   let formatted-value = ""
   if value != none {
@@ -105,7 +105,7 @@
 // - per: Whether to format the units after `/` with a fraction or exponent.
 #let format-unit-short(
   string,
-  space: "#h(0.166667em)",
+  space: "thin",
   per: "symbol"
 ) = {
   assert(per == "symbol" or per == "fraction" or per == "/")
@@ -246,7 +246,7 @@
 // - per: Whether to format the units after `per` with a fraction or exponent.
 #let format-unit(
   string,
-  space: "#h(0.166667em)",
+  space: "thin",
   per: "symbol"
 ) = {
   assert(per == "symbol" or per == "fraction" or per == "/")
@@ -413,8 +413,8 @@
   exponent-lower: none,
   exponent-upper: none,
   delimiter: "-",
-  space: "#h(0.16667em)",
-  thousandsep: "#h(0.166667em)",
+  space: "thin",
+  thousandsep: "thin",
   force-parentheses: false
 ) = {
   let formatted-value = ""
