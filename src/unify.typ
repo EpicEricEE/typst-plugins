@@ -27,7 +27,7 @@
     lower = captures-value.at(7)
   }
 
-  let formatted = format-num(
+  let formatted = format-number(
     captures-value.at(0),
     exponent: captures-value.at(17),
     upper: upper,
@@ -90,7 +90,7 @@
     lower = captures-value.at(7)
   }
 
-  let formatted-value = format-num(
+  let formatted-value = format-number(
     captures-value.at(0),
     exponent: captures-value.at(17),
     upper: upper,
