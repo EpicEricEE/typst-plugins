@@ -1,4 +1,4 @@
-// Regex pattern for a number.
+// Regex pattern for a number with plus/minus uncertainty.
 //
 // Returns the following captures:
 // - 0: The value.
@@ -6,19 +6,33 @@
 // - 2: The lower error.
 // - 3: The combined error.
 // - 4: The exponent.
-#let number-pattern = regex({
-  "^"                                     // Start of string
-  "([\+-]?\d+\.?\d*)?"                    // Value (optional)
-  "(?:"                                   // Uncertainty (start)
-    "(?:\+(\d+\.?\d*)-(\d+\.?\d*))"       // > Upper and lower
-    "|"                                   // > or
-    "(?:(?:(?:\+-)|(?:-\+))(\d+\.?\d*))"  // > Combined
-  ")?"                                    // Uncertainty (end) (optional)
-  "(?:[eE]([-\+]?\d+))?"                  // Exponent (optional)
-  "$"                                     // End of string
+#let number-pattern-plusminus = regex({
+  "^"                               // Start of string
+  "([\+-]?\d+\.?\d*)?"              // Value (optional)
+  "(?:"                             // Uncertainty (start)
+    "(?:\+(\d+\.?\d*)-(\d+\.?\d*))" // > Upper and lower
+    "|"                             // > or
+    "(?:(?:±|\+-|-\+)(\d+\.?\d*))"  // > Combined
+  ")?"                              // Uncertainty (end) (optional)
+  "(?:[eE]([-\+]?\d+))?"            // Exponent (optional)
+  "$"                               // End of string
 })
 
-// Parse a number string with the `number-pattern` regex.
+// Regex pattern for a number with last-digits uncertainty.
+//
+// Returns the following captures:
+// - 0: The value.
+// - 1: The uncertainty.
+// - 2: The exponent.
+#let number-pattern-parentheses = regex({
+  "^"                    // Start of string
+  "([\+-]?\d+\.?\d*)"    // Value
+  "(?:\((\d+)\))?"       // Uncertainty
+  "(?:[eE]([-\+]?\d+))?" // Exponent (optional)
+  "$"                    // End of string
+})
+
+// Parse a number string.
 //
 // Parameters:
 // - value: String with the number.
@@ -31,22 +45,46 @@
 #let parse-number(value) = {
   value = value.replace(",", ".").replace(" ", "")
 
-  let match = value.match(number-pattern)
-  assert.ne(match, none, message: "invalid number: " + value)
-  let (value, upper, lower, combined, exponent) = match.captures
-  
-  // If a combined error is given, use it for both upper and lower.
-  if combined != none {
-    upper = combined
-    lower = combined
+  let match = value.match(number-pattern-plusminus)
+  if match == none {
+    match = value.match(number-pattern-parentheses)
   }
 
+  assert.ne(match, none, message: "invalid number: " + value)
+  let (value, ..rest, exponent) = match.captures
+
   // Strip leading plus signs.
-  if value != none and value.first() == "+" {
-    value = value.slice(1)
+  if value != none {
+    value = value.trim("+", at: start)
   }
-  if exponent != none and exponent.first() == "+" {
-    exponent = exponent.slice(1)
+  if exponent != none {
+    exponent = exponent.trim("+", at: start)
+  }
+  
+  let (upper, lower) = if rest.len() == 3 {
+    // Plus/minus uncertainty.
+    let (upper, lower, combined) = rest
+    if combined != none {
+      (combined, combined)
+    } else {
+      (upper, lower)
+    }
+  } else {
+    // Parentheses uncertainty.
+    let error = rest.first()
+    let len = value.replace(".", "").len()
+    if error.len() < len {
+      error = "0" * (len - error.len()) + error
+    }
+
+    let decimal-pos = value.position(".")
+    if decimal-pos != none {
+      decimal-pos = value.len() - decimal-pos - 1 // Position from end
+      error = error.slice(0, -decimal-pos) + "." + error.slice(-decimal-pos)
+    }
+
+    error = error.replace(regex("^0+(\d+)\."), m => m.captures.first() + ".")
+    (error, error)
   }
 
   (
