@@ -54,6 +54,9 @@
     return "(" + numerator + ") / (" + denominator + ")"
   } else {
     let space = if normal != () and normal.last().exponent == "1" { unit-space }
+    if inverted.len() > 1 { 
+      denominator = "(" + denominator + ")"
+    }
     return numerator + " " + space + " \/ " + unit-space + " " + denominator
   }
 }
