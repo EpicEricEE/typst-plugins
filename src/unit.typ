@@ -17,7 +17,11 @@
 ) = {
   // Format a single atom.
   let format-atom(atom) = {
-    let result = atom.prefix + " " + atom.name
+    let result = ""
+    if atom.prefix != none {
+      result += atom.prefix + " "
+    }
+    result += atom.name
     if atom.exponent != "1" {
       result += "^(" + atom.exponent + ")"
     }
