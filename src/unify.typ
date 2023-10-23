@@ -29,7 +29,7 @@
 // Parameters:
 // - unit: String containing the unit.
 // - unit-space: Space between units.
-// - per: How to format unit fractions.
+// - per: How to format fractions.
 #let unit(
   unit,
   unit-space: "thin",
@@ -54,7 +54,7 @@
 // - group-sep: The seperator between digit groups.
 // - raw-unit: Whether to transform the unit or keep the raw string.
 // - unit-space: Space between units.
-// - per: How to format unit fractions.
+// - per: How to format fractions.
 #let qty(
   value,
   unit,
@@ -93,7 +93,7 @@
 // - lower: String containing the lower bound.
 // - upper: String containing the upper bound.
 // - product: The symbol to use for the exponent product.
-// - decimal-sep: The decimal seperator.
+// - decimal-sep: The decimal separator.
 // - group-sep: The seperator between digit groups.
 // - delim: Symbol between the numbers.
 // - delim-space: Space between the numbers and the delimiter.
@@ -132,7 +132,7 @@
 // - delim-space: Space between the numbers and the delimiter.
 // - raw-unit: Whether to transform the unit or keep the raw string.
 // - unit-space: Space between units.
-// - per: How to format unit fractions.
+// - per: How to format fractions.
 #let qtyrange(
   lower,
   upper,

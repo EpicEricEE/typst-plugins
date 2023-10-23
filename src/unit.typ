@@ -1,15 +1,15 @@
 #import "data.typ"
 
-// Format a list of unit atoms.
+// Format a list of atoms.
 //
 // Parameters:
 // - atoms: List of
-//   - prefix: Prefix of the unit, or `none`.
-//   - name: Base unit name.
-//   - space: Whether a space is needed before the unit.
-//   - exponent: Exponent of the unit.
+//   - prefix: Prefix of the atom, or `none`.
+//   - name: Base name.
+//   - space: Whether a space is needed before the atom.
+//   - exponent: Exponent of the atom.
 // - unit-space: Space between atoms.
-// - per: How to format unit fractions.
+// - per: How to format fractions.
 #let format-atoms(
   atoms,
   unit-space: "thin",
@@ -57,17 +57,18 @@
   }
 }
 
-// Parses a unit in the given string using the shorthand notation.
+// Parses an atom string using the shorthand notation.
 //
 // Parameters:
-// - base: String containing the base unit. May include a prefix, but not an exponent.
+// - atom: String containing the atom.
+// - inverted: Whether the atom is inverted.
 // 
 // Returns:
-// - prefix: Prefix of the unit, or `none`.
-// - name: Base unit.
-// - space: Whether a space is needed before the unit.
-// - exponent: Exponent of the unit.
-#let expect-short-unit(atom, inverted: false) = {
+// - prefix: Prefix of the atom, or `none`.
+// - name: Base name.
+// - space: Whether a space is needed before the atom.
+// - exponent: Exponent of the atom.
+#let expect-short-atom(atom, inverted: false) = {
   let split = atom.split("^")
   let base = split.first()
   let exponent = split.at(1, default: "1")
@@ -101,21 +102,20 @@
     }
   }
 
-  // No matching prefix + unit found.
+  // No matching prefix + unit name found.
   panic("invalid unit: " + base)
 }
 
-// Parses a unit string using the shorthand notation into a list of units.
+// Parses a unit string using the shorthand notation into a list of atoms.
 //
 // Parameters:
 // - string: String containing the unit.
 //
 // Returns: List of
-// - prefix: Prefix of the unit, or `none`.
-// - name: Base unit name.
-// - space: Whether a space is needed before the unit.
-// - exponent: Exponent of the unit.
-// - inverted: Whether the unit is inverted.
+// - prefix: Prefix of the atom, or `none`.
+// - name: Base name.
+// - space: Whether a space is needed before the atom.
+// - exponent: Exponent of the atom.
 #let parse-short-unit(string) = {
   let factors = string
     .replace(regex("\s*/\s*"), "/")
@@ -125,29 +125,29 @@
   let atoms = factors
     .map(factor => factor.split("/"))
     .map(((first, ..rest)) => (
-      expect-short-unit(first),
-      ..rest.map(expect-short-unit.with(inverted: true))
+      expect-short-atom(first),
+      ..rest.map(expect-short-atom.with(inverted: true))
     ))
     .flatten()
 
   atoms
 }
 
-// Parses the next unit in a list of words using the long notation.
+// Parses the next atom in a list of words using the long notation.
 //
 // Parameters:
 // - words: List of words.
 //
 // Returns:
-// - prefix: Prefix of the unit, or `none`.
-// - name: Base unit name.
-// - space: Whether a space is needed before the unit.
-// - exponent: Exponent of the unit.
+// - prefix: Prefix of the atom, or `none`.
+// - name: Base name.
+// - space: Whether a space is needed before the atom.
+// - exponent: Exponent of the atom.
 // - index: Index of the next word.
-#let expect-long-unit(words) = {
+#let expect-long-atom(words) = {
   let word-count = 0
   
-  // Check if unit is inverted.
+  // Check if atom is inverted.
   let next = words.at(word-count, default: none)
   assert.ne(next, none, message: "expected unit")
   let inverted = next == "per"
@@ -163,7 +163,7 @@
     word-count += 1
   }
 
-  // Expect main unit.
+  // Expect base atom.
   let (curr, next) = (next, words.at(word-count, default: none))
   assert.ne(next, none, message: "expected unit after \"" + curr + "\"")
   let unit = data.units.at(next, default: none)
@@ -191,27 +191,27 @@
   )
 }
 
-// Parses a unit string using the long notation into a list of units.
+// Parses a unit string using the long notation into a list of atoms.
 //
 // Parameters:
 // - string: String containing the unit.
 //
 // Returns: List of
-// - prefix: Prefix of the unit, or `none`.
-// - name: Base unit name.
-// - space: Whether a space is needed before the unit.
-// - exponent: Exponent of the unit.
-// - inverted: Whether the unit is inverted.
+// - prefix: Prefix of the atom, or `none`.
+// - name: Base name.
+// - space: Whether a space is needed before the atom.
+// - exponent: Exponent of the atom.
+// - inverted: Whether the atom is inverted.
 #let parse-long-unit(string) = {
   let words = lower(string)
     .replace(regex("\s+"), " ")
     .split(regex(" "))
 
   let i = 0
-  let units = ()
+  let atoms = ()
   while i < words.len() {
-    let (word-count, ..unit) = expect-long-unit(words.slice(i))
-    units.push(unit)
+    let (word-count, ..atom) = expect-long-atom(words.slice(i))
+    atoms.push(atom)
     i += word-count
   }
 

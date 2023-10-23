@@ -18,7 +18,7 @@
   "$"                                     // End of string
 })
 
-// Parse a float-string with the `number-pattern` regex.
+// Parse a number string with the `number-pattern` regex.
 //
 // Parameters:
 // - value: String with the number.
@@ -35,7 +35,7 @@
   assert.ne(match, none, message: "invalid number: " + value)
   let (value, upper, lower, combined, exponent) = match.captures
   
-  // If the combined error is given, use it for both upper and lower.
+  // If a combined error is given, use it for both upper and lower.
   if combined != none {
     upper = combined
     lower = combined
@@ -168,8 +168,8 @@
 // Format a range.
 //
 // Parameters:
-// - lower: The string containing the lower number.
-// - upper: The string containing the upper number.
+// - lower: The string containing the lower bound.
+// - upper: The string containing the upper bound.
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
 // - group-sep: The seperator between digit groups.
