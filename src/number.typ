@@ -83,7 +83,7 @@
       error = error.slice(0, -decimal-pos) + "." + error.slice(-decimal-pos)
     }
 
-    error = error.replace(regex("^0+(\d+)\."), m => m.captures.first() + ".")
+    error = error.replace(regex("^0+(\d+)"), m => m.captures.first())
     (error, error)
   }
 
