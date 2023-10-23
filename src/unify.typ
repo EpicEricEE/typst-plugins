@@ -1,66 +1,6 @@
 #import "format/number.typ": format-number, format-range
 #import "format/unit.typ": format-unit
 
-// Regex pattern for a number.
-//
-// Includes the following captures:
-// - 0: The value.
-// - 1: The upper error.
-// - 2: The lower error.
-// - 3: The combined error.
-// - 4: The exponent.
-#let number-pattern = regex({
-  "^"                                     // Start of string
-  "([\+-]?\d+\.?\d*)?"                    // Value (optional)
-  "(?:"                                   // Uncertainty (start)
-    "(?:\+(\d+\.?\d*)-(\d+\.?\d*))"       // > Upper and lower
-    "|"                                   // > or
-    "(?:(?:(?:\+-)|(?:-\+))(\d+\.?\d*))"  // > Combined
-  ")?"                                    // Uncertainty (end) (optional)
-  "(?:[eE]([-\+]?\d+))?"                  // Exponent (optional)
-  "$"                                     // End of string
-})
-
-// Parse a float-string with the `number-pattern` regex.
-//
-// Parameters:
-// - value: String with the number.
-//
-// Returns:
-// - value: String with the number.
-// - exponent: String with the exponent.
-// - upper: String with the upper error.
-// - lower: String with the lower error.
-#let parse-number(value) = {
-  value = value.replace(",", ".").replace(" ", "")
-
-  let match = value.match(number-pattern)
-  assert.ne(match, none, message: "invalid number: " + value)
-  let (value, upper, lower, combined, exponent) = match.captures
-  
-  // If the combined error is given, use it for both upper and lower.
-  if combined != none {
-    upper = combined
-    lower = combined
-  }
-
-  // Strip leading plus signs.
-  if value != none and value.first() == "+" {
-    value = value.slice(1)
-  }
-
-  if exponent != none and exponent.first() == "+" {
-    exponent = exponent.slice(1)
-  }
-
-  (
-    value: value,
-    exponent: exponent,
-    upper: upper,
-    lower: lower
-  )
-}
-
 // Format a number.
 //
 // Parameters:
@@ -74,10 +14,8 @@
   decimal-sep: ".",
   group-sep: "thin"
 ) = {
-  let number = parse-number(value)
-
   let result = format-number(
-    number,
+    value,
     product: product,
     decimal-sep: decimal-sep,
     group-sep: group-sep
@@ -127,14 +65,12 @@
   unit-space: "thin",
   per: "symbol"
 ) = {
-  let number = parse-number(value)
-
   let result = format-number(
-    number,
+    value,
     product: product,
     decimal-sep: decimal-sep,
     group-sep: group-sep,
-    force-parentheses: number.upper != none or number.lower != none,
+    force-parentheses: true,
   )
 
   result += " " + if raw-unit {
@@ -170,9 +106,6 @@
   delim: "\"to\"",
   delim-space: "",
 ) = {
-  let lower = parse-number(lower)
-  let upper = parse-number(upper)
-
   let result = format-range(
     lower,
     upper,
@@ -213,9 +146,6 @@
   unit-space: "thin",
   per: "symbol"
 ) = {
-  let lower = parse-number(lower)
-  let upper = parse-number(upper)
-
   let result = format-range(
     lower,
     upper,

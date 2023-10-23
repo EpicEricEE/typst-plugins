@@ -1,3 +1,62 @@
+// Regex pattern for a number.
+//
+// Returns the following captures:
+// - 0: The value.
+// - 1: The upper error.
+// - 2: The lower error.
+// - 3: The combined error.
+// - 4: The exponent.
+#let number-pattern = regex({
+  "^"                                     // Start of string
+  "([\+-]?\d+\.?\d*)?"                    // Value (optional)
+  "(?:"                                   // Uncertainty (start)
+    "(?:\+(\d+\.?\d*)-(\d+\.?\d*))"       // > Upper and lower
+    "|"                                   // > or
+    "(?:(?:(?:\+-)|(?:-\+))(\d+\.?\d*))"  // > Combined
+  ")?"                                    // Uncertainty (end) (optional)
+  "(?:[eE]([-\+]?\d+))?"                  // Exponent (optional)
+  "$"                                     // End of string
+})
+
+// Parse a float-string with the `number-pattern` regex.
+//
+// Parameters:
+// - value: String with the number.
+//
+// Returns:
+// - value: String with the number.
+// - exponent: String with the exponent.
+// - upper: String with the upper error.
+// - lower: String with the lower error.
+#let parse-number(value) = {
+  value = value.replace(",", ".").replace(" ", "")
+
+  let match = value.match(number-pattern)
+  assert.ne(match, none, message: "invalid number: " + value)
+  let (value, upper, lower, combined, exponent) = match.captures
+  
+  // If the combined error is given, use it for both upper and lower.
+  if combined != none {
+    upper = combined
+    lower = combined
+  }
+
+  // Strip leading plus signs.
+  if value != none and value.first() == "+" {
+    value = value.slice(1)
+  }
+  if exponent != none and exponent.first() == "+" {
+    exponent = exponent.slice(1)
+  }
+
+  (
+    value: value,
+    exponent: exponent,
+    upper: upper,
+    lower: lower
+  )
+}
+
 // Format a float (or integer).
 //
 // Parameters:
@@ -17,7 +76,7 @@
 
   let result = ""
   
-  // Append integer part
+  // Append integer part.
   let int-list = int-part.clusters()
   result += int-list.remove(0)
   for (i, digit) in int-list.enumerate() {
@@ -27,7 +86,7 @@
     result += digit
   }
 
-  // Append decimal part
+  // Append decimal part.
   if dec-part != none {
     result += decimal-sep
 
@@ -47,19 +106,20 @@
 
 // Format a number.
 //
-// Paramaters:
-// - number: The number.
+// Parameters:
+// - string: The string containing the number.
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
 // - group-sep: The seperator between digit groups.
-// - force-parentheses: Whether to force parentheses around the number.
+// - force-parentheses: Whether uncertainties force parentheses around the number.
 #let format-number(
-  number,
+  string,
   product: "dot",
   decimal-sep: ".",
   group-sep: "thin",
   force-parentheses: false
 ) = {
+  let number = parse-number(string)
   let format-float = format-float.with(
     decimal-sep: decimal-sep,
     group-sep: group-sep
@@ -67,12 +127,12 @@
 
   let result = ""
 
-  // Append main value
+  // Append main value.
   if number.value != none {
     result += format-float(number.value)
   }
 
-  // Append uncertainties
+  // Append uncertainties.
   if number.upper != none and number.lower != none {
     if number.upper != number.lower {
       result += "^(+" + format-float(number.upper) + ")"
@@ -86,8 +146,9 @@
     result += " plus.minus " + format-float(number.lower)
   }
 
-  // Wrap in brackets if necessary
-  let parentheses = force-parentheses
+  // Wrap in brackets if necessary.
+  let uncertain = number.upper != none or number.lower != none
+  let parentheses = force-parentheses and uncertain
   if not parentheses and number.exponent != none and number.value != none {
     parentheses = number.upper != none or number.lower != none
   }
@@ -95,7 +156,7 @@
     result = "lr((" + result + "))"
   }
 
-  // Append exponent
+  // Append exponent.
   if number.exponent != none {
     if number.value != none {
       result += " " + product + " "
@@ -109,8 +170,8 @@
 // Format a range.
 //
 // Parameters:
-// - lower: The upper number.
-// - upper: The lower number.
+// - lower: The string containing the lower number.
+// - upper: The string containing the upper number.
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
 // - group-sep: The seperator between digit groups.
@@ -127,6 +188,8 @@
   delim-space: "thin",
   force-parentheses: false,
 ) = {
+  let lower = parse-number(lower)
+  let upper = parse-number(upper)
   let format-float = format-float.with(
     decimal-sep: decimal-sep,
     group-sep: group-sep
@@ -134,7 +197,7 @@
 
   let result = ""
 
-  // Append lower value (and exponent)
+  // Append lower value (and exponent).
   result += format-float(lower.value)
   if lower.exponent != upper.exponent and lower.exponent != none {
     if lower.value != none {
@@ -143,10 +206,10 @@
     result += " 10^(" + str(lower.exponent) + ")"
   }
 
-  // Append delimiter
+  // Append delimiter.
   result += " " + delim-space + " " + delim + " " + delim-space + " "
   
-  // Append upper value (and exponent)
+  // Append upper value (and exponent).
   result += format-float(upper.value)
   if lower.exponent != upper.exponent and upper.exponent != none {
     if upper.value != none {
@@ -155,12 +218,16 @@
     result += "10^(" + str(upper.exponent) + ")"
   }
 
-  // Wrap in brackets and append common exponent
-  if lower.exponent == upper.exponent and lower.exponent != none {
+  // Wrap in brackets if necessary.
+  let exponent = lower.exponent == upper.exponent and lower.exponent != none
+  let parantheses = force-parentheses or exponent
+  if parantheses {
     result = "lr((" + result + "))"
+  }
+  
+  // Append common exponent.
+  if exponent {
     result += " " + product + " 10^(" + str(lower.exponent) + ")"
-  } else if force-parentheses {
-    result = "lr((" + result + "))"
   }
 
   result
