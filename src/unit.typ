@@ -17,17 +17,17 @@
 ) = {
   // Format a single atom.
   let format-atom(atom) = {
-    if atom.exponent == "0" { return "" }
-
     let result = atom.prefix + " " + atom.name
     if atom.exponent != "1" {
       result += "^(" + atom.exponent + ")"
     }
-
     result
   }
 
-  // Join atoms atoms to a sequence with the unit space as separator.
+  // Remove atoms with zero exponent, as they are equivalent to 1.
+  atoms = atoms.filter(atom => atom.exponent != "0")
+
+  // Join atoms into a sequence with the unit space as separator.
   let join(atoms) = atoms.map(format-atom).join(" " + unit-space + " ")
 
   if per == "symbol" {
