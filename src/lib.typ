@@ -12,7 +12,7 @@
 // - group-sep: The separator between digit groups.
 // - delim: Delimiter between numbers in a range. Quotes must be escaped.
 // - delim-space: Space between the numbers and the delimiter.
-// - unit-space: Space between units.
+// - unit-sep: The separator between units.
 // - per: How to format fractions. Can be "reciprocal", "fraction" or a custom symbol.
 //
 // Returns:
@@ -27,7 +27,7 @@
   group-sep: "thin",
   delim: "\"to\"",
   delim-space: "",
-  unit-space: "thin",
+  unit-sep: "thin",
   per: "reciprocal"
 ) = (
   num: num.with(
@@ -40,12 +40,12 @@
     product: product,
     decimal-sep: decimal-sep,
     group-sep: group-sep,
-    unit-space: unit-space,
+    unit-sep: unit-sep,
     per: per
   ),
 
   unit: unit.with(
-    unit-space: unit-space,
+    unit-sep: unit-sep,
     per: per
   ),
 
@@ -63,7 +63,7 @@
     group-sep: group-sep,
     delim: delim,
     delim-space: delim-space,
-    unit-space: unit-space,
+    unit-sep: unit-sep,
     per: per
   )
 )

@@ -8,11 +8,11 @@
 //   - name: Base name.
 //   - space: Whether a space is needed before the atom.
 //   - exponent: Exponent of the atom.
-// - unit-space: Space between atoms.
+// - unit-sep: The separator between atoms.
 // - per: How to format fractions.
 #let format-atoms(
   atoms,
-  unit-space: "thin",
+  unit-sep: "thin",
   per: "reciprocal"
 ) = {
   // Format a single atom.
@@ -32,7 +32,7 @@
   atoms = atoms.filter(atom => atom.exponent != "0")
 
   // Join atoms into a sequence with the unit space as separator.
-  let join(atoms) = atoms.map(format-atom).join(" " + unit-space + " ")
+  let join(atoms) = atoms.map(format-atom).join(" " + unit-sep + " ")
 
   if per == "reciprocal" {
     // Format as sequence of atoms with positive and negative exponents.
@@ -233,11 +233,11 @@
 //
 // Parameters:
 // - string: String containing the unit.
-// - unit-space: Space between units.
+// - unit-sep: The separator between units.
 // - per: How to format unit fractions.
 #let format-unit(
   string,
-  unit-space: "thin",
+  unit-sep: "thin",
   per: "reciprocal",
   prefix-space: false,
 ) = {
@@ -253,10 +253,10 @@
     parse-short-unit(string)
   }
 
-  // Prefix with unit-space if needed.
-  let result = format-atoms(atoms, unit-space: unit-space, per: per)
+  // Prefix with thin space if required.
+  let result = format-atoms(atoms, unit-sep: unit-sep, per: per)
   if prefix-space and atoms.first().space {
-    result = unit-space + " " + result
+    result = "thin " + result
   }
 
   result

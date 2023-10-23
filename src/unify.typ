@@ -67,16 +67,16 @@
 //
 // Parameters:
 // - unit: The unit.
-// - unit-space: Space between units.
+// - unit-sep: The separator between units.
 // - per: How to format fractions.
 #let unit(
   unit,
-  unit-space: "thin",
+  unit-sep: "thin",
   per: "reciprocal"
 ) = {
   let result = format-unit(
     to-string(unit),
-    unit-space: unit-space,
+    unit-sep: unit-sep,
     per: per
   )
 
@@ -92,7 +92,7 @@
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
 // - raw-unit: Whether to transform the unit or keep the raw string.
-// - unit-space: Space between units.
+// - unit-sep: The separator between units.
 // - per: How to format fractions.
 #let qty(
   value,
@@ -101,7 +101,7 @@
   decimal-sep: ".",
   group-sep: "thin",
   raw-unit: false,
-  unit-space: "thin",
+  unit-sep: "thin",
   per: "reciprocal"
 ) = {
   let result = format-number(
@@ -114,11 +114,11 @@
 
   unit = to-string(unit)
   result += " " + if raw-unit {
-    unit-space + " upright(" + unit + ")"
+    unit-sep + " upright(" + unit + ")"
   } else {
     format-unit(
       unit,
-      unit-space: unit-space,
+      unit-sep: unit-sep,
       per: per,
       prefix-space: true
     )
@@ -171,7 +171,7 @@
 // - delim: Symbol between the numbers.
 // - delim-space: Space between the numbers and the delimiter.
 // - raw-unit: Whether to transform the unit or keep the raw string.
-// - unit-space: Space between units.
+// - unit-sep: The separator between units.
 // - per: How to format fractions.
 #let qtyrange(
   lower,
@@ -183,7 +183,7 @@
   delim: "\"to\"",
   delim-space: "",
   raw-unit: false,
-  unit-space: "thin",
+  unit-sep: "thin",
   per: "reciprocal"
 ) = {
   let result = format-range(
@@ -199,11 +199,11 @@
 
   unit = to-string(unit)
   result += " " + if raw-unit {
-    unit-space + " upright(" + unit + ")"
+    "thin upright(" + unit + ")"
   } else {
     format-unit(
       unit,
-      unit-space: unit-space,
+      unit-sep: unit-sep,
       per: per,
       prefix-space: true
     )
