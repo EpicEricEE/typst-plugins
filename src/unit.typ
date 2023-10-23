@@ -53,7 +53,8 @@
   if per == "fraction" {
     return "(" + numerator + ") / (" + denominator + ")"
   } else {
-    return numerator + " \/ " + denominator
+    let space = if normal != () and normal.last().exponent == "1" { unit-space }
+    return numerator + " " + space + " \/ " + unit-space + " " + denominator
   }
 }
 
