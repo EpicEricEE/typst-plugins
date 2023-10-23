@@ -215,7 +215,7 @@
     i += word-count
   }
 
-  units
+  atoms
 }
 
 // Format the given unit string.
