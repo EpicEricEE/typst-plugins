@@ -6,7 +6,7 @@
 // The argument can be of type `int`, `float`, `str`, or `content`.
 //
 // If the argument is a `content` object, it can be a `math.attach`,
-// `math.frac` or `text` element, or a sequence of these.
+// `math.frac`, `math.lr` or `text` element, or a sequence of these.
 #let to-string(body) = {
   if type(body) == str {
     // Strings
@@ -25,6 +25,9 @@
       let num = to-string(body.num)
       let denom = to-string(body.denom)
       return num + "/" + denom
+    } else if body.func() == math.lr {
+      // Left/right
+      return to-string(body.body)
     } else if body.has("children") {
       // Sequences
       return body.children.map(to-string).join("")
