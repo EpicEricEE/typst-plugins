@@ -45,8 +45,8 @@
 // Parameters:
 // - value: The number.
 // - product: The symbol to use for the exponent product.
-// - decimal-sep: The decimal seperator.
-// - group-sep: The seperator between digit groups.
+// - decimal-sep: The decimal separator.
+// - group-sep: The separator between digit groups.
 #let num(
   value,
   product: "dot",
@@ -89,8 +89,8 @@
 // - value: The number.
 // - unit: The unit.
 // - product: The symbol to use for the exponent product.
-// - decimal-sep: The decimal seperator.
-// - group-sep: The seperator between digit groups.
+// - decimal-sep: The decimal separator.
+// - group-sep: The separator between digit groups.
 // - raw-unit: Whether to transform the unit or keep the raw string.
 // - unit-space: Space between units.
 // - per: How to format fractions.
@@ -134,7 +134,7 @@
 // - upper: The upper bound.
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
-// - group-sep: The seperator between digit groups.
+// - group-sep: The separator between digit groups.
 // - delim: Symbol between the numbers.
 // - delim-space: Space between the numbers and the delimiter.
 #let numrange(
@@ -166,8 +166,8 @@
 // - upper: The upper bound.
 // - unit: The unit.
 // - product: The symbol to use for the exponent product.
-// - decimal-sep: The decimal seperator.
-// - group-sep: The seperator between digit groups.
+// - decimal-sep: The decimal separator.
+// - group-sep: The separator between digit groups.
 // - delim: Symbol between the numbers.
 // - delim-space: Space between the numbers and the delimiter.
 // - raw-unit: Whether to transform the unit or keep the raw string.

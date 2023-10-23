@@ -100,7 +100,7 @@
 // Parameters:
 // - value: The float to format.
 // - decimal-sep: The decimal separator.
-// - group-sep: The seperator between digit groups.
+// - group-sep: The separator between digit groups.
 #let format-float(
   value,
   decimal-sep: ".",
@@ -148,7 +148,7 @@
 // - string: The string containing the number.
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
-// - group-sep: The seperator between digit groups.
+// - group-sep: The separator between digit groups.
 // - follows-unit: Whether this number is followed by a unit.
 #let format-number(
   string,
@@ -210,7 +210,7 @@
 // - upper: The string containing the upper bound.
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
-// - group-sep: The seperator between digit groups.
+// - group-sep: The separator between digit groups.
 // - delim: Symbol between the numbers.
 // - delim-space: Space between the numbers and the delimiter.
 // - follows-unit: Whether this range is followed by a unit.

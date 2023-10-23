@@ -8,8 +8,8 @@
 //
 // Parameters:
 // - product: The symbol to use for the exponent product.
-// - decimal-sep: The decimal seperator.
-// - group-sep: The seperator between digit groups.
+// - decimal-sep: The decimal separator.
+// - group-sep: The separator between digit groups.
 // - delim: Delimiter between numbers in a range. Quotes must be escaped.
 // - delim-space: Space between the numbers and the delimiter.
 // - unit-space: Space between units.
