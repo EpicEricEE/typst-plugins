@@ -13,7 +13,7 @@
 #let format-atoms(
   atoms,
   unit-space: "thin",
-  per: "symbol"
+  per: "reciprocal"
 ) = {
   // Format a single atom.
   let format-atom(atom) = {
@@ -34,7 +34,7 @@
   // Join atoms into a sequence with the unit space as separator.
   let join(atoms) = atoms.map(format-atom).join(" " + unit-space + " ")
 
-  if per == "symbol" {
+  if per == "reciprocal" {
     // Format as sequence of atoms with positive and negative exponents.
     return join(atoms)
   }
@@ -57,11 +57,11 @@
   if per == "fraction" {
     return "(" + numerator + ") / (" + denominator + ")"
   } else {
-    let space = if normal != () and normal.last().exponent == "1" { unit-space }
+    if per.trim() == "/" { per = "\/" }
     if inverted.len() > 1 { 
       denominator = "(" + denominator + ")"
     }
-    return numerator + " " + space + " \/ " + unit-space + " " + denominator
+    return numerator + " " + per + " " + denominator
   }
 }
 
@@ -238,7 +238,7 @@
 #let format-unit(
   string,
   unit-space: "thin",
-  per: "symbol",
+  per: "reciprocal",
   prefix-space: false,
 ) = {
   let long = {

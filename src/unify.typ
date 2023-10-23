@@ -72,7 +72,7 @@
 #let unit(
   unit,
   unit-space: "thin",
-  per: "symbol"
+  per: "reciprocal"
 ) = {
   let result = format-unit(
     to-string(unit),
@@ -102,7 +102,7 @@
   group-sep: "thin",
   raw-unit: false,
   unit-space: "thin",
-  per: "symbol"
+  per: "reciprocal"
 ) = {
   let result = format-number(
     to-string(value),
@@ -184,7 +184,7 @@
   delim-space: "",
   raw-unit: false,
   unit-space: "thin",
-  per: "symbol"
+  per: "reciprocal"
 ) = {
   let result = format-range(
     to-string(lower),

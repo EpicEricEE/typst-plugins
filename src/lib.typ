@@ -13,7 +13,7 @@
 // - delim: Delimiter between numbers in a range. Quotes must be escaped.
 // - delim-space: Space between the numbers and the delimiter.
 // - unit-space: Space between units.
-// - per: How to format fractions. Can be "symbol", "fraction" or "slash".
+// - per: How to format fractions. Can be "reciprocal", "fraction" or a custom symbol.
 //
 // Returns:
 // - num: A function that formats numbers.
@@ -28,7 +28,7 @@
   delim: "\"to\"",
   delim-space: "",
   unit-space: "thin",
-  per: "symbol"
+  per: "reciprocal"
 ) = (
   num: num.with(
     product: product,
