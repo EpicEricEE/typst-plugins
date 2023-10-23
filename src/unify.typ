@@ -1,5 +1,5 @@
-#import "format/number.typ": format-float, format-number, format-range
-#import "format/unit.typ": format-unit, format-unit-short
+#import "format/number.typ": format-number, format-range
+#import "format/unit.typ": format-unit
 
 // Regex pattern for a number.
 //
@@ -21,7 +21,7 @@
   "$"                                     // End of string
 })
 
-// Parse a float-string with the above regex.
+// Parse a float-string with the `number-pattern` regex.
 //
 // Parameters:
 // - value: String with the number.
@@ -36,13 +36,6 @@
 
   let match = value.match(number-pattern)
   assert.ne(match, none, message: "invalid number: " + value)
-
-  // Assert that the given number is a valid float.
-  let validate(string) = if string != none {
-    let _ = float(string)
-    string
-  }
-
   let (value, upper, lower, combined, exponent) = match.captures
   
   // If the combined error is given, use it for both upper and lower.
@@ -61,10 +54,10 @@
   }
 
   (
-    value: validate(value),
-    exponent: validate(exponent),
-    upper: validate(upper),
-    lower: validate(lower)
+    value: value,
+    exponent: exponent,
+    upper: upper,
+    lower: lower
   )
 }
 
@@ -106,7 +99,7 @@
 ) = {
   let result = format-unit(
     unit,
-    space: unit-space,
+    unit-space: unit-space,
     per: per
   )
 
@@ -140,13 +133,19 @@
     number,
     product: product,
     decimal-sep: decimal-sep,
-    group-sep: group-sep
+    group-sep: group-sep,
+    force-parentheses: number.upper != none or number.lower != none,
   )
 
-  if raw-unit {
-    result += unit-space + " upright(" + unit + ")"
+  result += " " + if raw-unit {
+    unit-space + " upright(" + unit + ")"
   } else {
-    result += format-unit(unit, space: unit-space, per: per)
+    format-unit(
+      unit,
+      unit-space: unit-space,
+      per: per,
+      prefix-space: true
+    )
   }
 
   eval(mode: "math", result)
@@ -228,10 +227,15 @@
     force-parentheses: true,
   )
 
-  if raw-unit {
-    result += unit-space + " upright(" + unit + ")"
+  result += " " + if raw-unit {
+    unit-space + " upright(" + unit + ")"
   } else {
-    result += format-unit(unit, space: unitspace, per: per)
+    format-unit(
+      unit,
+      unit-space: unit-space,
+      per: per,
+      prefix-space: true
+    )
   }
 
   eval(mode: "math", result)

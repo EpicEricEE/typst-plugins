@@ -1,305 +1,255 @@
-#import "../data.typ": *
+#import "../data.typ"
 
-// TODO: Find out what this does
-#let chunk(string, cond) = (string: string, cond: cond)
-
-// Format a unit using the shorthand notation.
+// Format a list of unit atoms.
 //
 // Parameters:
-// - string: String containing the unit.
-// - space: Space between units.
-// - per: Whether to format the units after `/` with a fraction or exponent.
-#let format-unit-short(
-  string,
-  space: "thin",
+// - atoms: List of
+//   - prefix: Prefix of the unit, or `none`.
+//   - name: Base unit name.
+//   - space: Whether a space is needed before the unit.
+//   - exponent: Exponent of the unit.
+// - unit-space: Space between atoms.
+// - per: How to format unit fractions.
+#let format-atoms(
+  atoms,
+  unit-space: "thin",
   per: "symbol"
 ) = {
-  assert(per == "symbol" or per == "fraction" or per == "/")
+  // Format a single atom.
+  let format-atom(atom) = {
+    if atom.exponent == "0" { return "" }
 
-  let formatted = ""
-
-  let split = string
-    .replace(regex(" */ *"), "/")
-    .replace(regex(" +"), " ")
-    .split(regex(" "))
-  let chunks = ()
-  for s in split {
-    let per-split = s.split("/")
-    chunks.push(chunk(per-split.at(0), false))
-    if per-split.len() > 1 {
-      for p in per-split.slice(1) {
-        chunks.push(chunk(p, true))
-      }
+    let result = atom.prefix + " " + atom.name
+    if atom.exponent != "1" {
+      result += "^(" + atom.exponent + ")"
     }
+
+    result
   }
 
-  // needed for fraction formatting
-  let normal-list = ()
-  let per-list = ()
+  // Join atoms atoms to a sequence with the unit space as separator.
+  let join(atoms) = atoms.map(format-atom).join(" " + unit-space + " ")
 
-  let prefixes = ()
-  for (string: string, cond: per-set) in chunks {
-    let u-space = true
-    let prefix = none
-    let unit = ""
-    let exponent = none
+  if per == "symbol" {
+    // Format as sequence of atoms with positive and negative exponents.
+    return join(atoms)
+  }
+  
+  // Partition atoms into normal and inverted ones and adjust exponents.
+  let (normal, inverted) = atoms.fold(((), ()), (acc, unit) => {
+    let index = if unit.exponent.first() == "-" { 1 } else { 0 }
+    acc.at(index).push((..unit, exponent: unit.exponent.slice(index)))
+    acc
+  })
 
-    let qty-exp = string.split("^")
-    let quantity = qty-exp.at(0)
-    exponent = qty-exp.at(1, default: none)
-
-    if quantity in units-short {
-      // Match units without prefixes
-      unit = units-short.at(quantity)
-      u-space = units-short-space.at(quantity)
-    } else {
-      // Match prefix + unit
-      let pre = ""
-      for char in quantity.clusters() {
-        pre += char
-        // Divide `quantity` into `pre`+`u` and check validity
-        if pre in prefixes-short {
-          let u = quantity.trim(pre, at: start, repeat: false)
-          if u in units-short {
-            prefix = prefixes-short.at(pre)
-            unit = units-short.at(u)
-            u-space = units-short-space.at(u)
-
-            pre = none
-            break
-          }
-        }
-      }
-      if pre != none {
-        panic("invalid unit: " + quantity)
-      }
-    }
-
-    if per == "symbol" {
-      if u-space {
-        formatted += space
-      }
-      formatted += prefix + unit
-      if exponent != none {
-        if per-set {
-          formatted += "^(-" + exponent + ")"
-        } else {
-          formatted += "^(" + exponent + ")"
-        }
-      } else if per-set {
-        formatted += "^(-1)"
-      }
-    } else {
-      let final-unit = ""
-      // if u-space {
-      //   final-unit += space
-      // }
-      final-unit += prefix + unit
-      if exponent != none {
-          final-unit += "^(" + exponent + ")"
-      }
-
-      if per-set {
-        per-list.push(chunk(final-unit, u-space))
-      } else {
-        normal-list.push(chunk(final-unit, u-space))
-      }
-    }
+  if inverted == () {
+    // No inverted units, so just join the normal ones.
+    return join(normal)
   }
 
-  // return((normal-list, per-list))
+  let numerator = if normal == () { "1" } else { join(normal) }
+  let denominator = join(inverted)
 
-  if per != "symbol" {
-    if normal-list.at(0).at("cond") {
-      formatted += space
-    }
-
-    if per-list.len() > 0 {
-      formatted += " ("
-    }
-    
-    for (i, chunk) in normal-list.enumerate() {
-      let (string: n, cond: space-set) = chunk
-      if i != 0 and space-set {
-        formatted += space
-      }
-      formatted += n
-    }
-
-    if per-list.len() == 0 {
-      return formatted
-    }
-
-    formatted += ")/("
-    for (i, chunk) in per-list.enumerate() {
-      let (string: p, cond: space-set) = chunk
-      if i != 0 and space-set {
-        formatted += space
-      }
-      formatted += p
-    }
-    formatted += ")"
+  if per == "fraction" {
+    return "(" + numerator + ") / (" + denominator + ")"
+  } else {
+    return numerator + " \/ " + denominator
   }
-
-  formatted
 }
 
-// Format a unit using written-out words.
+// Parses a unit in the given string using the shorthand notation.
+//
+// Parameters:
+// - base: String containing the base unit. May include a prefix, but not an exponent.
+// 
+// Returns:
+// - prefix: Prefix of the unit, or `none`.
+// - name: Base unit.
+// - space: Whether a space is needed before the unit.
+// - exponent: Exponent of the unit.
+#let expect-short-unit(atom, inverted: false) = {
+  let split = atom.split("^")
+  let base = split.first()
+  let exponent = split.at(1, default: "1")
+
+  let unit = data.units-short.at(base, default: none)
+  if unit != none {
+    // Base is a unit without a prefix.
+    return (
+      prefix: none,
+      name: unit, 
+      space: data.units-short-space.at(base),
+      exponent: if inverted { "-" } + exponent
+    )
+  }
+  
+  // Find first matching prefix + unit
+  let prefix = ""
+  for char in base.clusters() {
+    prefix += char
+    
+    if prefix in data.prefixes-short {
+      let unit = base.slice(prefix.len())
+      if unit in data.units-short {
+        return (
+          prefix: data.prefixes-short.at(prefix),
+          name: data.units-short.at(unit),
+          space: data.units-short-space.at(unit),
+          exponent: if inverted { "-" } + exponent
+        )
+      }
+    }
+  }
+
+  // No matching prefix + unit found.
+  panic("invalid unit: " + base)
+}
+
+// Parses a unit string using the shorthand notation into a list of units.
 //
 // Parameters:
 // - string: String containing the unit.
-// - space: Space between units.
-// - per: Whether to format the units after `per` with a fraction or exponent.
+//
+// Returns: List of
+// - prefix: Prefix of the unit, or `none`.
+// - name: Base unit name.
+// - space: Whether a space is needed before the unit.
+// - exponent: Exponent of the unit.
+// - inverted: Whether the unit is inverted.
+#let parse-short-unit(string) = {
+  let factors = string
+    .replace(regex("\s*/\s*"), "/")
+    .replace(regex("\s+"), " ")
+    .split(regex(" "))
+
+  let atoms = factors
+    .map(factor => factor.split("/"))
+    .map(((first, ..rest)) => (
+      expect-short-unit(first),
+      ..rest.map(expect-short-unit.with(inverted: true))
+    ))
+    .flatten()
+
+  atoms
+}
+
+// Parses the next unit in a list of words using the long notation.
+//
+// Parameters:
+// - words: List of words.
+//
+// Returns:
+// - prefix: Prefix of the unit, or `none`.
+// - name: Base unit name.
+// - space: Whether a space is needed before the unit.
+// - exponent: Exponent of the unit.
+// - index: Index of the next word.
+#let expect-long-unit(words) = {
+  let word-count = 0
+  
+  // Check if unit is inverted.
+  let next = words.at(word-count, default: none)
+  assert.ne(next, none, message: "expected unit")
+  let inverted = next == "per"
+  if inverted {
+    word-count += 1
+  }
+
+  // Check if prefix is given.
+  let (curr, next) = (next, words.at(word-count, default: none))
+  assert.ne(next, none, message: "expected unit after \"" + curr + "\"")
+  let prefix = data.prefixes.at(next, default: none)
+  if prefix != none {
+    word-count += 1
+  }
+
+  // Expect main unit.
+  let (curr, next) = (next, words.at(word-count, default: none))
+  assert.ne(next, none, message: "expected unit after \"" + curr + "\"")
+  let unit = data.units.at(next, default: none)
+  let space = data.units-space.at(next, default: none)
+  assert.ne(unit, none, message: "invalid unit: " + next)
+  word-count += 1
+
+  // Check if exponent is given.
+  let next = words.at(word-count, default: none)
+  let exponent = if next != none {
+    data.postfixes.at(next, default: none)
+  }
+  if exponent != none {
+    word-count += 1
+  } else {
+    exponent = "1"
+  }
+
+  return (
+    prefix: prefix,
+    name: unit,
+    space: space,
+    exponent: if inverted { "-" } + exponent,
+    word-count: word-count
+  )
+}
+
+// Parses a unit string using the long notation into a list of units.
+//
+// Parameters:
+// - string: String containing the unit.
+//
+// Returns: List of
+// - prefix: Prefix of the unit, or `none`.
+// - name: Base unit name.
+// - space: Whether a space is needed before the unit.
+// - exponent: Exponent of the unit.
+// - inverted: Whether the unit is inverted.
+#let parse-long-unit(string) = {
+  let words = lower(string)
+    .replace(regex("\s+"), " ")
+    .split(regex(" "))
+
+  let i = 0
+  let units = ()
+  while i < words.len() {
+    let (word-count, ..unit) = expect-long-unit(words.slice(i))
+    units.push(unit)
+    i += word-count
+  }
+
+  units
+}
+
+// Format the given unit string.
+//
+// The unit can be given in shorthand notation (e.g. "m/s^2") or as written-out
+// words (e.g. "meter per second squared").
+//
+// Parameters:
+// - string: String containing the unit.
+// - unit-space: Space between units.
+// - per: How to format unit fractions.
 #let format-unit(
   string,
-  space: "thin",
-  per: "symbol"
+  unit-space: "thin",
+  per: "symbol",
+  prefix-space: false,
 ) = {
-  assert(per == "symbol" or per == "fraction" or per == "/")
-
-  let formatted = ""
-
-  // needed for fraction formatting
-  let normal-list = ()
-  let per-list = ()
-
-  // whether per was used
-  let per-set = false
-  // whether waiting for a postfix
-  let post = false
-  // one unit
-  let unit = chunk("", true)
-
-  let split = lower(string).split(" ")
-  split.push("")
-
-  for u in split {
-    // expecting postfix
-    if post {
-      if per == "symbol" {
-        // add postfix
-        if u in postfixes {
-          if per-set {
-            unit.at("string") += "^(-"
-          } else {
-            unit.at("string") += "^("
-          }
-          unit.at("string") += postfixes.at(u)
-          unit.at("string") += ")"
-
-          if unit.at("cond") {
-            unit.at("string") = space + unit.at("string")
-          }
-
-          per-set = false
-          post = false
-
-          formatted += unit.at("string")
-          unit = chunk("", true)
-          continue
-        // add per
-        } else if per-set {
-          unit.at("string") += "^(-1)"
-
-          if unit.at("cond") {
-            unit.at("string") = space + unit.at("string")
-          }
-
-          per-set = false
-          post = false
-
-          formatted += unit.at("string")
-          unit = chunk("", true)
-        // finish unit
-        } else {
-          post = false
-
-          if unit.at("cond") {
-            unit.at("string") = space + unit.at("string")
-          }
-
-          formatted += unit.at("string")
-          unit = chunk("", true)
-        }
-      } else {
-        if u in postfixes {
-          unit.at("string") += "^("
-          unit.at("string") += postfixes.at(u)
-          unit.at("string") += ")"
-
-          if per-set {
-            per-list.push(unit)
-          } else {
-            normal-list.push(unit)
-          }
-
-          per-set = false
-          post = false
-
-          unit = chunk("", true)
-          continue
-        } else {
-          if per-set {
-            per-list.push(unit)
-          } else {
-            normal-list.push(unit)
-          }
-
-          per-set = false
-          post = false
-
-          unit = chunk("", true)
-        }
-      }
-    }
-
-    // detected per
-    if u == "per" {
-      per-set = true
-    // add prefix
-    } else if u in prefixes {
-      unit.at("string") += prefixes.at(u)
-    // add unit
-    } else if u in units {
-      unit.at("string") += units.at(u)
-      unit.at("cond") = units-space.at(u)
-      post = true
-    } else if u != "" {
-      return format-unit-short(string, space: space, per: per)
-    }
+  let long = {
+    // Check whether the first word is characteristic for the long notation.
+    let first = lower(string).trim().split(" ").first()
+    first == "per" or first in data.prefixes or first in data.units
   }
 
-  if per != "symbol" {
-    if normal-list.at(0).at("cond") {
-      formatted += space
-    }
-
-    if per-list.len() > 0 {
-      formatted += " ("
-    }
-
-    for (i, chunk) in normal-list.enumerate() {
-      let (string: n, cond: space-set) = chunk
-      if i != 0 and space-set {
-        formatted += space
-      }
-      formatted += n
-    }
-
-    if per-list.len() == 0 {
-      return formatted
-    }
-
-    formatted += ")/("
-    for (i, chunk) in per-list.enumerate() {
-      let (string: p, cond: space-set) = chunk
-      if i != 0 and space-set {
-        formatted += space
-      }
-      formatted += p
-    }
-    formatted += ")"
+  let atoms = if long {
+    parse-long-unit(string)
+  } else {
+    parse-short-unit(string)
   }
 
-  formatted
+  // Prefix with unit-space if needed.
+  let result = format-atoms(atoms, unit-space: unit-space, per: per)
+  if prefix-space and atoms.first().space {
+    result = unit-space + " " + result
+  }
+
+  result
 }

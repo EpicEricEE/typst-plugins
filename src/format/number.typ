@@ -52,11 +52,13 @@
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
 // - group-sep: The seperator between digit groups.
+// - force-parentheses: Whether to force parentheses around the number.
 #let format-number(
   number,
   product: "dot",
   decimal-sep: ".",
-  group-sep: "thin"
+  group-sep: "thin",
+  force-parentheses: false
 ) = {
   let format-float = format-float.with(
     decimal-sep: decimal-sep,
@@ -84,13 +86,17 @@
     result += " plus.minus " + format-float(number.lower)
   }
 
-  if number.exponent != none {
-    // Wrap in brackets if necessary
-    if number.upper != none or number.lower != none {
-      result = "lr((" + result + "))"
-    }
+  // Wrap in brackets if necessary
+  let parentheses = force-parentheses
+  if not parentheses and number.exponent != none and number.value != none {
+    parentheses = number.upper != none or number.lower != none
+  }
+  if parentheses {
+    result = "lr((" + result + "))"
+  }
 
-    // Append exponent
+  // Append exponent
+  if number.exponent != none {
     if number.value != none {
       result += " " + product + " "
     }
