@@ -1,5 +1,5 @@
-#import "format/number.typ": format-number, format-range
-#import "format/unit.typ": format-unit
+#import "number.typ": format-number, format-range
+#import "unit.typ": format-unit
 
 // Format a number.
 //

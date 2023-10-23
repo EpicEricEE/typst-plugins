@@ -1,4 +1,4 @@
-#import "../data.typ"
+#import "data.typ"
 
 // Format a list of unit atoms.
 //
