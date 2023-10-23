@@ -4,6 +4,9 @@
 // Convert the argument to a string.
 //
 // The argument can be of type `int`, `float`, `str`, or `content`.
+//
+// If the argument is a `content` object, it can be a `math.attach`,
+// `math.frac` or `text` element, or a sequence of these.
 #let to-string(body) = {
   if type(body) == str {
     // Strings
