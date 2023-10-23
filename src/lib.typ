@@ -13,7 +13,8 @@
 // - delim: Delimiter between numbers in a range. Quotes must be escaped.
 // - delim-space: Space between the numbers and the delimiter.
 // - unit-sep: The separator between units.
-// - per: How to format fractions. Can be "reciprocal", "fraction" or a custom symbol.
+// - per: How to format fractions. Can be "reciprocal", "fraction" or a custom
+//        symbol.
 //
 // Returns:
 // - num: A function that formats numbers.
