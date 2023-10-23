@@ -70,7 +70,7 @@
     product: product,
     decimal-sep: decimal-sep,
     group-sep: group-sep,
-    force-parentheses: true,
+    follows-unit: true,
   )
 
   result += " " + if raw-unit {
@@ -154,7 +154,7 @@
     group-sep: group-sep,
     delim: delim,
     delim-space: delim-space,
-    force-parentheses: true,
+    follows-unit: true,
   )
 
   result += " " + if raw-unit {

@@ -111,13 +111,13 @@
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
 // - group-sep: The seperator between digit groups.
-// - force-parentheses: Whether uncertainties force parentheses around the number.
+// - follows-unit: Whether this number is followed by a unit.
 #let format-number(
   string,
   product: "dot",
   decimal-sep: ".",
   group-sep: "thin",
-  force-parentheses: false
+  follows-unit: false
 ) = {
   let number = parse-number(string)
   let format-float = format-float.with(
@@ -148,10 +148,8 @@
 
   // Wrap in brackets if necessary.
   let uncertain = number.upper != none or number.lower != none
-  let parentheses = force-parentheses and uncertain
-  if not parentheses and number.exponent != none and number.value != none {
-    parentheses = number.upper != none or number.lower != none
-  }
+  let exponent-product = number.value != none and number.exponent != none
+  let parentheses = uncertain and (follows-unit or exponent-product)
   if parentheses {
     result = "lr((" + result + "))"
   }
@@ -177,7 +175,7 @@
 // - group-sep: The seperator between digit groups.
 // - delim: Symbol between the numbers.
 // - delim-space: Space between the numbers and the delimiter.
-// - force-parentheses: Whether to force parentheses around the range.
+// - follows-unit: Whether this range is followed by a unit.
 #let format-range(
   lower,
   upper,
@@ -186,7 +184,7 @@
   group-sep: "thin",
   delim: "-",
   delim-space: "thin",
-  force-parentheses: false,
+  follows-unit: false,
 ) = {
   let lower = parse-number(lower)
   let upper = parse-number(upper)
@@ -220,7 +218,7 @@
 
   // Wrap in brackets if necessary.
   let exponent = lower.exponent == upper.exponent and lower.exponent != none
-  let parantheses = force-parentheses or exponent
+  let parantheses = follows-unit or exponent
   if parantheses {
     result = "lr((" + result + "))"
   }
