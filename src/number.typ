@@ -197,7 +197,7 @@
     if number.value != none {
       result += " " + product + " "
     }
-    result += "10^(" + str(number.exponent) + ")"
+    result += "10^(" + format-float(number.exponent) + ")"
   }
 
   result
@@ -239,7 +239,7 @@
     if lower.value != none {
       result += " " + product + " "
     }
-    result += " 10^(" + str(lower.exponent) + ")"
+    result += " 10^(" + format-float(lower.exponent) + ")"
   }
 
   // Append delimiter.
@@ -251,7 +251,7 @@
     if upper.value != none {
       result += " " + product + " "
     }
-    result += "10^(" + str(upper.exponent) + ")"
+    result += "10^(" + format-float(upper.exponent) + ")"
   }
 
   // Wrap in brackets if necessary.
@@ -263,7 +263,7 @@
   
   // Append common exponent.
   if exponent {
-    result += " " + product + " 10^(" + str(lower.exponent) + ")"
+    result += " " + product + " 10^(" + format-float(lower.exponent) + ")"
   }
 
   result
