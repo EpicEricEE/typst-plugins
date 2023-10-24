@@ -1,7 +1,7 @@
 # united
 A package for easy typesetting of numbers with units.
 
-This fork of the [unify](https://github.com/ChHecker/typst-unify) package, which was inspired by the [siunitx](https://ctan.org/pkg/siunitx) package for LaTeX, aims to further enhance the functionality and usability of the original package.
+This fork of the [unify](https://github.com/ChHecker/unify) package, which was inspired by the [siunitx](https://ctan.org/pkg/siunitx) package for LaTeX, aims to further enhance the functionality and usability of the original package.
 
 ## Usage
 The package comes with five functions: `num`, `qty`, `unit`, `numrange`, and `qtyrange`, which resemble the equally called LaTeX commands:
