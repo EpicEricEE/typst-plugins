@@ -1,9 +1,9 @@
 [package]
-name = "unify"
-version = "0.4.3"
+name = "united"
+version = "0.1.0"
 entrypoint = "src/lib.typ"
 authors = ["Eric Biedert", "Christopher Hecker"]
-repository = "https://github.com/ChHecker/unify"
+repository = "https://github.com/EpicEricEE/typst-plugins"
 license = "MIT"
-description = "Format numbers, units, and ranges correctly."
-exclude = ["README.md", "examples"]
+description = "Easy typesetting of numbers with units."
+exclude = ["README.md", "examples/**"]

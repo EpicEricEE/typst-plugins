@@ -1,70 +1,83 @@
-# Unify
-`unify` is a [Typst](https://github.com/typst/typst) package simplifying the typesetting of number, (physical) units, and ranges. It is the equivalent to LaTeX's `siunitx`, though not as mature.
+# united
+A package for easy typesetting of numbers with units.
 
+This fork of the [unify](https://github.com/ChHecker/typst-unify) package, which was inspired by the [siunitx](https://ctan.org/pkg/siunitx) package for LaTeX, aims to further enhance the functionality and usability of the original package.
 
-## Overview
-`unify` allows flexible numbers and units, and still mostly gets well typeset results.
+## Usage
+The package comes with five functions: `num`, `qty`, `unit`, `numrange`, and `qtyrange`, which resemble the equally called LaTeX commands:
+
+| Function   | Description                              | Basic Example            |
+|------------|------------------------------------------|--------------------------|
+| `num`      | Typesets an integer or decimal number.   | `#num[3.14159]`          |
+| `qty`      | Typesets a number with a unit.           | `#qty[42][meter]`        |
+| `unit`     | Typesets a unit.                         | `#unit[m/s^2]`           |
+| `numrange` | Typesets a range of numbers.             | `#numrange[1][5]`        |
+| `qtyrange` | Typesets a range of numbers with a unit. | `#qtyrange[2][4][second]`|
+
+The parameters can be passed either as strings or as content in markup or math mode. Basic numbers can also be passed as `float`s or `int`s.
+
+### Numbers
+A number consists of a main value, and can be accompanied by an uncertainty and an exponent. The uncertainty can be passed in different ways, which the following examples show:
+
+![Example of numbers](.github/examples/numbers.svg)
+
+### Units
+Units can be passed either as words or as shorthand symbols. A single unit constists of an optional prefix, the base unit, and an optional postfix (exponent). The following examples show how to pass units:
+
+![Example of units](.github/examples/units.svg)
+
+### Quantities
+A quantity is a number accompanied by a unit. The same rules apply as for numbers and units separately. The following examples show how to pass quantities:
+
+![Example of quantities](.github/examples/quantities.svg)
+
+### Ranges
+The `range` functions work similarly to the `num` and `qty` functions, but take an additional number as the second argument. The following examples show how to pass ranges:
+
+![Example of ranges](.github/examples/ranges.svg)  
+
+### Styling
+Every function has a multitude of optional parameters intended for customizing the style of the output. Functions that combine numbers and units (`qty`, `qtyrange`) have parameters for both numbers and units.
+
+For ease of use, the package comes with a convenience function, that allows setting the same parameters for all functions at once. The following example shows how to set the decimal separator to a comma:
+
 ```typ
-#import "@preview/unify:0.4.3": num,qty,numrange,qtyrange
+#import "@preview/united:0.1.0"
+#let (num, qty) = united.with(decimal-sep: ",")
 
-$ num("-1.32865+-0.50273e-6") $
-$ qty("1.3+1.2-0.3e3", "erg/cm^2/s", space: "#h(2mm)") $
-$ numrange("1,1238e-2", "3,0868e5", thousandsep: "'") $
-$ qtyrange("1e3", "2e3", "meter per second squared", per: "/", delimiter: "\"to\"") $
+$ pi approx num(3.14159) $
 ```
-<img src=".github/overview.jpg" width="300">
 
+The parameters are given as strings. They are later evaluated in math mode, so quotes and other symbols have to be escaped.
 
-## `num`
-`num` uses string parsing in order to typeset numbers, including separators between the thousands. They can have the following form:
-- `float` or `integer` number
-- either (`{}` stands for a number)
-    - symmetric uncertainties with `+-{}`
-    - asymmetric uncertainties with `+{}-{}`
-- exponential notation `e{}`
+#### Numbers
 
-Parentheses are automatically set as necessary. Use `thousandsep` to change the separator between the thousands.
+| Parameter     | Description                                | Default Value  |
+|---------------|--------------------------------------------|----------------|
+| `decimal-sep` | The decimal separator.                     | `"."`          |
+| `group-sep`   | The separator between digit groups.        | `"thin"`       |
+| `product`     | The symbol to use for the exponent product | `"dot"`        |
 
+#### Units
 
-## `unit`
-`unit` takes the unit in words or in symbolic notation as its first argument. The value of `space` will be inserted between units if necessary. Setting `per` to `symbol` will format the number with exponents (i.e. `^(-1)`), and `fraction` or `/` using fraction.  
-Units in words have four possible parts:
-- `per` forms the inverse of the following unit.
-- A written-out prefix in the sense of SI (e.g. `centi`). This is added before the unit.
-- The unit itself written out (e.g. `gram`).
-- A postfix like `squared`. This is added after the unit and takes `per` into account.
+| Parameter     | Description                                | Default Value  |
+|---------------|--------------------------------------------|----------------|
+| `unit-sep`    | The separator between units.               | `"thin"`       |
+| `per`         | How to format inverted units.              | `"reciprocal"` |
 
-The shorthand notation also has four parts:
-- `/` forms the inverse of the following unit.
-- A short prefix in the sense of SI (e.g. `c`). This is added before the unit.
-- The short unit itself (e.g. `g`).
-- An exponent like `^2`. This is added after the unit and takes `/` into account.
+The `per` parameter allows the following values:
 
-Note: Use `u` for micro.
+| Value          | Description                                                         |
+|----------------|---------------------------------------------------------------------|
+| `"reciprocal"` | Show unit as a product, inverted units have negative exponents.     |
+| `"fraction"`   | Show unit as a fraction.                                            |
+| `"{symbol}"`   | Show unit as an inline fraction with the given symbol as delimiter. |
 
-The possible values of the three latter parts are loaded at runtime from `prefixes.csv`, `units.csv`, and `postfixes.csv` (in the library directory). There, you can also add your own units. The formats for the pre- and postfixes are:
+Keep in mind that the symbol is evaluated in math mode, so quotes, slashes and other symbols have to be escaped by a backslash.
 
-| pre-/postfix | shorthand | symbol       |
-| ------------ | --------- | ------------ |
-| milli        | m         | upright("m") |
+#### Ranges
 
-and for units:
-
-| unit  | shorthand | symbol       | space |
-| ----- | --------- | ------------ | ----- |
-| meter | m         | upright("m") | true  |
-
-The first column specifies the written-out word, the second one the shorthand. These should be unique. The third column represents the string that will be inserted as the unit symbol. For units, the last column describes whether there should be space before the unit (possible values: `true`/`false`, `1`,`0`). This is mostly the cases for degrees and other angle units (e.g. arcseconds).  
-If you think there are units not included that are of interest for other users, you can create an issue or PR.
-
-
-## `qty`
-`qty` allows a `num` as the first argument following the same rules. The second argument is a unit. If `rawunit` is set to true, its value will be passed on to the result (note that the string passed on will be passed to `eval`, so add escaped quotes `\"` if necessary). Otherwise, it follows the rules of `unit`. The value of `space` will be inserted between units if necessary, `thousandsep` between the thousands, and `per` switches between exponents and fractions.  
-
-
-## `numrange`
-`numrange` takes two `num`s as the first two arguments. If they have the same exponent, it is automatically factorized. The range symbol can be changed with `delimiter`, and the space between the numbers and symbols with `space`.
-
-
-## `qtyrange`
-`qtyrange` is just a combination of `unit` and `range`.
+| Parameter     | Description                                | Default Value  |
+|---------------|--------------------------------------------|----------------|
+| `delim`       | The delimiter between the numbers.         | `"\"to\""`     |
+| `delim-space` | The space between number and delimiter.    | `""`           |
