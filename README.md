@@ -21,4 +21,4 @@ Packages that run on top of WASM need to be built before they can be used. The p
 The commands are to be run in the root directory of this repository.
 
 ## License
-This repository is licensed under the [MIT License](LICENSE).
+The license for each package is found in its respective subdirectory.
