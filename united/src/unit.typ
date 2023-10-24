@@ -82,6 +82,7 @@
   let exponent = split.at(1, default: "1")
 
   let unit = data.units-short.at(base, default: none)
+  let space = data.units-short-space.at(base, default: true)
 
   if unit == none {
     // Check if unit is given in quotes.
@@ -95,8 +96,8 @@
     // Base is a unit without a prefix.
     return (
       prefix: none,
-      name: unit, 
-      space: data.units-short-space.at(base),
+      name: unit,
+      space: space,
       exponent: if inverted { "-" } + exponent
     )
   }
