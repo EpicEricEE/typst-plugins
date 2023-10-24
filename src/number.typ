@@ -171,8 +171,12 @@
   let result = ""
 
   // Append main value.
+  let uncertain = number.upper != none or number.lower != none
   if number.value != none {
-    result += format-float(number.value)
+    // Don't show value if it is 1 and there is an exponent.
+    if number.value != "1" or uncertain or number.exponent == none {
+      result += format-float(number.value)
+    }
   }
 
   // Append uncertainties.
@@ -200,7 +204,10 @@
   // Append exponent.
   if number.exponent != none {
     if number.value != none {
-      result += " " + product + " "
+      // Same as above, don't show product if only the exponent is left.
+      if number.value != "1" or uncertain or number.exponent == none {
+        result += " " + product + " "
+      }
     }
     result += "10^(" + format-float(number.exponent) + ")"
   }
