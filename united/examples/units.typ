@@ -26,5 +26,6 @@
   [`#unit[joule per kilo gram]`], [#unit[joule per kilo gram]],
   [`#unit[kg m^2/s^2]`],          [#unit[kg m^2/s^2]],
   [`#unit[per second]`],          [#unit[per second]],
+  [`#unit['apples' per day]`],    [#unit['apples' per day]],
   [`$unit("cm"^-1)$`],            [$unit("cm"^-1)$],
 )

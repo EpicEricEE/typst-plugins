@@ -5,8 +5,8 @@
 //
 // The argument can be of type `int`, `float`, `str`, or `content`.
 //
-// If the argument is a `content` object, it can be a `math.attach`,
-// `math.frac`, `math.lr` or `text` element, or a sequence of these.
+// If the argument is of type `content`, it can be an `attach`, `frac`, `lr`,
+// `smartquote` or `text` element, or a sequence of these.
 #let to-string(body) = {
   if type(body) == str {
     // Strings
@@ -28,6 +28,9 @@
     } else if body.func() == math.lr {
       // Left/right
       return to-string(body.body)
+    } else if body.func() == smartquote {
+      // Quotation marks
+      return "'"
     } else if body.has("children") {
       // Sequences
       return body.children.map(to-string).join("")
@@ -94,7 +97,6 @@
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
-// - raw-unit: Whether to transform the unit or keep the raw string.
 // - unit-sep: The separator between units.
 // - per: How to format fractions.
 #let qty(
@@ -103,7 +105,6 @@
   product: "dot",
   decimal-sep: ".",
   group-sep: "thin",
-  raw-unit: false,
   unit-sep: "thin",
   per: "reciprocal"
 ) = {
@@ -115,17 +116,12 @@
     follows-unit: true,
   )
 
-  unit = to-string(unit)
-  result += " " + if raw-unit {
-    unit-sep + " upright(" + unit + ")"
-  } else {
-    format-unit(
-      unit,
-      unit-sep: unit-sep,
-      per: per,
-      prefix-space: true
-    )
-  }
+  result += " " + format-unit(
+    to-string(unit),
+    unit-sep: unit-sep,
+    per: per,
+    prefix-space: true
+  )
 
   eval(mode: "math", result)
 }
@@ -173,7 +169,6 @@
 // - group-sep: The separator between digit groups.
 // - delim: Symbol between the numbers.
 // - delim-space: Space between the numbers and the delimiter.
-// - raw-unit: Whether to transform the unit or keep the raw string.
 // - unit-sep: The separator between units.
 // - per: How to format fractions.
 #let qtyrange(
@@ -185,7 +180,6 @@
   group-sep: "thin",
   delim: "\"to\"",
   delim-space: "",
-  raw-unit: false,
   unit-sep: "thin",
   per: "reciprocal"
 ) = {
@@ -201,16 +195,12 @@
   )
 
   unit = to-string(unit)
-  result += " " + if raw-unit {
-    "thin upright(" + unit + ")"
-  } else {
-    format-unit(
-      unit,
-      unit-sep: unit-sep,
-      per: per,
-      prefix-space: true
-    )
-  }
+  result += " " + format-unit(
+    unit,
+    unit-sep: unit-sep,
+    per: per,
+    prefix-space: true
+  )
 
   eval(mode: "math", result)
 }

@@ -17,12 +17,12 @@ The package comes with five functions: `num`, `qty`, `unit`, `numrange`, and `qt
 The parameters can be passed either as strings or as content in markup or math mode. Basic numbers can also be passed as `float`s or `int`s.
 
 ### Numbers
-A number consists of a main value, and can be accompanied by an uncertainty and an exponent. The uncertainty can be passed in different ways, which the following examples show:
+A number consists of a main value, and can be accompanied by an uncertainty and an exponent. The uncertainty can be typed in different ways, which the following examples show:
 
 ![Example of numbers](examples/numbers.svg)
 
 ### Units
-Units can be passed either as words or as shorthand symbols. A single unit constists of an optional prefix, the base unit, and an optional postfix (exponent). The following examples show how to pass units:
+Units can be passed either as words or as shorthand symbols. A single unit consists of an optional prefix, the base unit, and an optional postfix (exponent). Custom units can be typed by wrapping them in single quotes. The following examples show the different ways of typing units:
 
 ![Example of units](examples/units.svg)
 

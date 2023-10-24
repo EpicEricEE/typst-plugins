@@ -82,6 +82,15 @@
   let exponent = split.at(1, default: "1")
 
   let unit = data.units-short.at(base, default: none)
+
+  if unit == none {
+    // Check if unit is given in quotes.
+    let match = base.match(regex("^'(.+)'$"))
+    if match != none {
+      unit = "upright(\"" + match.captures.first() + "\")"
+    }
+  }
+
   if unit != none {
     // Base is a unit without a prefix.
     return (
@@ -164,18 +173,25 @@
   }
 
   // Check if prefix is given.
-  let (curr, next) = (next, words.at(word-count, default: none))
-  assert.ne(next, none, message: "expected unit after \"" + curr + "\"")
+  let (prev, next) = (next, words.at(word-count, default: none))
+  assert.ne(next, none, message: "expected unit after \"" + prev + "\"")
   let prefix = data.prefixes.at(next, default: none)
   if prefix != none {
     word-count += 1
   }
 
   // Expect base atom.
-  let (curr, next) = (next, words.at(word-count, default: none))
-  assert.ne(next, none, message: "expected unit after \"" + curr + "\"")
+  let (prev, next) = (next, words.at(word-count, default: none))
+  assert.ne(next, none, message: "expected unit after \"" + prev + "\"")
   let unit = data.units.at(next, default: none)
-  let space = data.units-space.at(next, default: none)
+  if unit == none {
+    // Check if unit is given in quotes.
+    let match = next.match(regex("^'(.+)'$"))
+    if match != none {
+      unit = "upright(\"" + match.captures.first() + "\")"
+    }
+  }
+  let space = data.units-space.at(next, default: true)
   assert.ne(unit, none, message: "invalid unit: " + next)
   word-count += 1
 
@@ -241,11 +257,10 @@
   per: "reciprocal",
   prefix-space: false,
 ) = {
-  let long = {
-    // Check whether the first word is characteristic for the long notation.
-    let first = lower(string).trim().split(" ").first()
-    first == "per" or first in data.prefixes or first in data.units
-  }
+  // Check whether any word is characteristic for the long notation.
+  let long = lower(string).trim().split(" ").any(word => {
+    (("per",), data.prefixes, data.units, data.postfixes).any(d => word in d)
+  })
 
   let atoms = if long {
     parse-long-unit(string)
