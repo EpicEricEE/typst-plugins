@@ -13,7 +13,7 @@ pub fn png(
     fill: &[u8],
 ) -> Result<Vec<u8>, String> {
     let code = QRBuilder::new(data).build().map_err(|e| e.to_string())?;
-    let margin = *margin.get(0).unwrap_or(&0);
+    let margin = *margin.first().unwrap_or(&0);
 
     ImageBuilder::default()
         .margin(margin.into())
@@ -34,7 +34,7 @@ pub fn svg(
     fill: &[u8],
 ) -> Result<Vec<u8>, String> {
     let code = QRBuilder::new(data).build().map_err(|e| e.to_string())?;
-    let margin = *margin.get(0).unwrap_or(&0);
+    let margin = *margin.first().unwrap_or(&0);
 
     Ok(SvgBuilder::default()
         .margin(margin.into())
