@@ -1,0 +1,9 @@
+[package]
+name = "united"
+version = "0.1.0"
+entrypoint = "src/lib.typ"
+authors = ["Eric Biedert", "Christopher Hecker"]
+repository = "https://github.com/EpicEricEE/typst-plugins"
+license = "MIT"
+description = "Easy typesetting of numbers with units."
+exclude = ["README.md", "examples/**"]
