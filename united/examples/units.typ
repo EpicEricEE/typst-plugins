@@ -20,12 +20,12 @@
 
 #table(
   columns: 2,
-  [*Input*],                      [*Output*],
-  [`#unit("kilo meter")`],        [#unit("kilo meter")],
-  [`#unit[meter squared]`],       [#unit[meter squared]],
-  [`#unit[joule per kilo gram]`], [#unit[joule per kilo gram]],
-  [`#unit[kg m^2/s^2]`],          [#unit[kg m^2/s^2]],
-  [`#unit[per second]`],          [#unit[per second]],
-  [`#unit['apples' per day]`],    [#unit['apples' per day]],
-  [`$unit("cm"^-1)$`],            [$unit("cm"^-1)$],
+  [*Input*],                     [*Output*],
+  [`#unit("kilo meter")`],       [#unit("kilo meter")],
+  [`#unit[meter squared]`],      [#unit[meter squared]],
+  [`#unit[joule per kilogram]`], [#unit[joule per kilogram]],
+  [`#unit[kg m^2/s^2]`],         [#unit[kg m^2/s^2]],
+  [`#unit[per second]`],         [#unit[per second]],
+  [`#unit['apples' per day]`],   [#unit['apples' per day]],
+  [`$unit("cm"^-1)$`],           [$unit("cm"^-1)$],
 )
