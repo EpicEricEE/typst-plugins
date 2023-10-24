@@ -19,22 +19,22 @@ The parameters can be passed either as strings or as content in markup or math m
 ### Numbers
 A number consists of a main value, and can be accompanied by an uncertainty and an exponent. The uncertainty can be passed in different ways, which the following examples show:
 
-![Example of numbers](.github/examples/numbers.svg)
+![Example of numbers](examples/numbers.svg)
 
 ### Units
 Units can be passed either as words or as shorthand symbols. A single unit constists of an optional prefix, the base unit, and an optional postfix (exponent). The following examples show how to pass units:
 
-![Example of units](.github/examples/units.svg)
+![Example of units](examples/units.svg)
 
 ### Quantities
 A quantity is a number accompanied by a unit. The same rules apply as for numbers and units separately. The following examples show how to pass quantities:
 
-![Example of quantities](.github/examples/quantities.svg)
+![Example of quantities](examples/quantities.svg)
 
 ### Ranges
 The `range` functions work similarly to the `num` and `qty` functions, but take an additional number as the second argument. The following examples show how to pass ranges:
 
-![Example of ranges](.github/examples/ranges.svg)  
+![Example of ranges](examples/ranges.svg)  
 
 ### Styling
 Every function has a multitude of optional parameters intended for customizing the style of the output. Functions that combine numbers and units (`qty`, `qtyrange`) have parameters for both numbers and units.
