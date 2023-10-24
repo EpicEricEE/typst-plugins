@@ -9,6 +9,7 @@ This repository contains my packages for [typst](https://github.com/typst/typst)
 | [outex](outex/) | 0.1.0 | Outlines styled like in LaTeX. |
 | [qr](qr/) | 0.1.0 | Fast QR Code generator. |
 | [quick-maths](quick-maths/) | 0.1.0 | Custom shorthands for math equations. |
+| [united](united/) | 0.1.0 | Easy typesetting of numbers with units. |
 
 ## Building
 Packages that run on top of WASM need to be built before they can be used. The package source directories already contain the compiled WASM files of the latest state. To build the WASM files yourself, you need to have [Rust](https://www.rust-lang.org/) installed with the `wasm32-unknown-unknown` target.
