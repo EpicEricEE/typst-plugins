@@ -43,6 +43,11 @@
 // - upper: String with the upper error.
 // - lower: String with the lower error.
 #let parse-number(value) = {
+  if type(value) == dictionary {
+    // ! Necessary for `format-range` to work.
+    return value
+  }
+
   value = value.replace(",", ".").replace(" ", "")
 
   let match = value.match(number-pattern-plusminus)
@@ -233,37 +238,31 @@
 
   let result = ""
 
-  // Append lower value (and exponent).
-  result += format-float(lower.value)
-  if lower.exponent != upper.exponent and lower.exponent != none {
-    if lower.value != none {
-      result += " " + product + " "
+  let common-exponent = {
+    if lower.exponent == upper.exponent and lower.exponent != none {
+      format-float(lower.exponent)
+      // Remove exponent from numbers.
+      lower.exponent = none
+      upper.exponent = none
     }
-    result += " 10^(" + format-float(lower.exponent) + ")"
   }
 
-  // Append delimiter.
+  // Append numbers and delimiter.
+  // ! `format-number` takes a string, but these numbers are already parsed.
+  // ! This is why `parse-number` includes a short-circuit for dictionaries.
+  result += format-number(lower)
   result += " " + delim-space + " " + delim + " " + delim-space + " "
-  
-  // Append upper value (and exponent).
-  result += format-float(upper.value)
-  if lower.exponent != upper.exponent and upper.exponent != none {
-    if upper.value != none {
-      result += " " + product + " "
-    }
-    result += "10^(" + format-float(upper.exponent) + ")"
-  }
+  result += format-number(upper)
 
   // Wrap in brackets if necessary.
-  let exponent = lower.exponent == upper.exponent and lower.exponent != none
-  let parantheses = follows-unit or exponent
+  let parantheses = follows-unit or common-exponent != none
   if parantheses {
     result = "lr((" + result + "))"
   }
   
   // Append common exponent.
-  if exponent {
-    result += " " + product + " 10^(" + format-float(lower.exponent) + ")"
+  if common-exponent != none {
+    result += " " + product + " 10^(" + common-exponent + ")"
   }
 
   result
