@@ -64,13 +64,13 @@
 #let (
   prefixes,
   prefixes-short
-) = read-prefixes("/assets/prefixes.csv")
+) = read-prefixes("../assets/prefixes.csv")
 
 #let (
   units,
   units-short,
   units-space,
   units-short-space
-) = read-units("/assets/units.csv")
+) = read-units("../assets/units.csv")
 
-#let postfixes = read-postfixes("/assets/postfixes.csv")
+#let postfixes = read-postfixes("../assets/postfixes.csv")
