@@ -37,8 +37,13 @@
   
   // Partition atoms into normal and inverted ones and adjust exponents.
   let (normal, inverted) = atoms.fold(((), ()), (acc, unit) => {
-    let index = if unit.exponent.first() == math.minus { 1 } else { 0 }
-    acc.at(index).push((..unit, exponent: unit.exponent.slice(index)))
+    let (index, exponent) = if unit.exponent.first() == str(math.minus) {
+      (1, unit.exponent.slice(str(math.minus).len()))
+    } else {
+      (0, unit.exponent)
+    }
+
+    acc.at(index).push((..unit, exponent: exponent))
     acc
   })
 
