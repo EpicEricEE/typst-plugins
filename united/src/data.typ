@@ -5,15 +5,15 @@
 // - delimiter: Passed to the `csv` function.
 #let read-prefixes(path, delimiter: ",") = {
   let array = csv(path, delimiter: delimiter)
-  let symbols = (:)
-  let symbols-short = (:)
+  let prefixes = (:)
+  let prefixes-short = (:)
 
-  for line in array {
-    symbols.insert(lower(line.at(0)), line.at(2))
-    symbols-short.insert(line.at(1), line.at(2))
+  for (name, short, value) in array {
+    prefixes.insert(lower(name), value)
+    prefixes-short.insert(short, value)
   }
 
-  (symbols, symbols-short)
+  (prefixes, prefixes-short)
 }
 
 // Load a CSV file with postfixes.
@@ -23,13 +23,13 @@
 // - delimiter: Passed to the `csv` function.
 #let read-postfixes(path, delimiter: ",") = {
   let array = csv(path, delimiter: delimiter)
-  let dict = (:)
+  let postfixes = (:)
 
-  for line in array {
-    dict.insert(lower(line.at(0)), line.at(1))
+  for (name, value) in array {
+    postfixes.insert(lower(name), value)
   }
 
-  dict
+  postfixes
 }
 
 // Load a CSV file with units.
@@ -44,16 +44,13 @@
   let units-space = (:)
   let units-short-space = (:)
 
-  for line in array {
-    units.insert(lower(line.at(0)), line.at(2))
-    units-short.insert(line.at(1), line.at(2))
-    if line.at(3) == "false" or line.at(3) == "0" {
-      units-space.insert(lower(line.at(0)), false)
-      units-short-space.insert(line.at(1), false)
-    } else {
-      units-space.insert(lower(line.at(0)), true)
-      units-short-space.insert(line.at(1), true)
-    }
+  for (name, short, value, space) in array {
+    units.insert(lower(name), value)
+    units-short.insert(short, value)
+
+    space = space in ("true", "1")
+    units-space.insert(lower(name), space)
+    units-short-space.insert(short, space)
   }
 
   (units, units-short, units-space, units-short-space)
