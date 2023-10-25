@@ -186,19 +186,25 @@
                                         <use xlink:href="#gDE8D19C7F1D9D78607050E66A8D98092" x="0" fill="#000000"/>
                                     </g>
                                 </g>
-                                <g transform="translate(20.692 19.362000000000002)">
-                                    <g class="typst-text" transform="scale(0.014 -0.014)">
-                                        <use xlink:href="#g2B20FE68DAA1105A774DB31B1F3BC994" x="0" fill="#000000"/>
-                                    </g>
-                                </g>
-                                <g transform="translate(27.692 19.362000000000002)">
-                                    <g class="typst-text" transform="scale(0.014 -0.014)">
-                                        <use xlink:href="#g12C87BE0574DA22001189852B9EDBAB0" x="0" fill="#000000"/>
-                                    </g>
-                                </g>
-                                <g transform="translate(34.692 19.362000000000002)">
-                                    <g class="typst-text" transform="scale(0.014 -0.014)">
-                                        <use xlink:href="#g2B20FE68DAA1105A774DB31B1F3BC994" x="0" fill="#000000"/>
+                                <g transform="translate(20.692 9.883999999999999)">
+                                    <g class="typst-group">
+                                        <g>
+                                            <g transform="translate(0 9.478000000000002)">
+                                                <g class="typst-text" transform="scale(0.014 -0.014)">
+                                                    <use xlink:href="#g2B20FE68DAA1105A774DB31B1F3BC994" x="0" fill="#000000"/>
+                                                </g>
+                                            </g>
+                                            <g transform="translate(7 9.478000000000002)">
+                                                <g class="typst-text" transform="scale(0.014 -0.014)">
+                                                    <use xlink:href="#g12C87BE0574DA22001189852B9EDBAB0" x="0" fill="#000000"/>
+                                                </g>
+                                            </g>
+                                            <g transform="translate(14 9.478000000000002)">
+                                                <g class="typst-text" transform="scale(0.014 -0.014)">
+                                                    <use xlink:href="#g2B20FE68DAA1105A774DB31B1F3BC994" x="0" fill="#000000"/>
+                                                </g>
+                                            </g>
+                                        </g>
                                     </g>
                                 </g>
                                 <g transform="translate(44.02533333333333 19.362000000000002)">

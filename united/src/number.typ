@@ -121,23 +121,31 @@
   
   // Append integer part.
   let digits = int-part.clusters()
-  result += digits.remove(0)
-  for (i, digit) in digits.enumerate() {
-    if calc.rem(digits.len() - i, 3) == 0 {
-      result += group-sep
+  result += if digits.len() < 5 or group-sep == none {
+    digits.join()
+  } else {
+    digits.remove(0)
+    for (i, digit) in digits.enumerate() {
+      if calc.rem(digits.len() - i, 3) == 0 {
+        [#group-sep]
+      }
+      digit
     }
-    result += digit
   }
 
   // Append decimal part.
   if dec-part != none {
     result += decimal-sep
     let digits = dec-part.clusters()
-    for (i, digit) in digits.enumerate() {
-      if i != 0 and calc.rem(i, 3) == 0 {
-        result += group-sep
+    result += if digits.len() < 5 or group-sep == none {
+      digits.join()
+    } else {
+      for (i, digit) in digits.enumerate() {
+        if i not in (0, digits.len() - 1) and calc.rem(i, 3) == 0 {
+          [#group-sep]
+        }
+        digit
       }
-      result += digit
     }
   }
 
