@@ -10,7 +10,7 @@
 // - product: The symbol to use for the exponent product.
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
-// - delim: Delimiter between numbers in a range. Quotes must be escaped.
+// - delim: Delimiter between numbers in a range.
 // - delim-space: Space between the numbers and the delimiter.
 // - unit-sep: The separator between units.
 // - per: How to format fractions. Can be "reciprocal", "fraction" or a custom
@@ -23,12 +23,12 @@
 // - numrange: A function that formats number ranges.
 // - qtyrange: A function that formats quantity ranges.
 #let with(
-  product: "dot",
+  product: math.dot,
   decimal-sep: ".",
-  group-sep: "thin",
-  delim: "\"to\"",
-  delim-space: "",
-  unit-sep: "thin",
+  group-sep: math.thin,
+  delim: "to",
+  delim-space: math.space,
+  unit-sep: math.thin,
   per: "reciprocal"
 ) = (
   num: num.with(

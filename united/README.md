@@ -48,36 +48,36 @@ For ease of use, the package comes with a convenience function, that allows sett
 $ pi approx num(3.14159) $
 ```
 
-The parameters are given as strings. They are later evaluated in math mode, so quotes and other symbols have to be escaped.
-
 #### Numbers
 
 | Parameter     | Description                                | Default Value  |
 |---------------|--------------------------------------------|----------------|
 | `decimal-sep` | The decimal separator.                     | `"."`          |
-| `group-sep`   | The separator between digit groups.        | `"thin"`       |
-| `product`     | The symbol to use for the exponent product | `"dot"`        |
+| `group-sep`   | The separator between digit groups.        | `math.thin`    |
+| `product`     | The symbol to use for the exponent product | `math.dot`     |
+
+When changing the group or decimal separator to `","`, the spacing is automatically trimmed. To disable digit grouping, set the `group-sep` parameter to `none`.
 
 #### Units
 
 | Parameter     | Description                                | Default Value  |
 |---------------|--------------------------------------------|----------------|
-| `unit-sep`    | The separator between units.               | `"thin"`       |
+| `unit-sep`    | The separator between units.               | `math.thin`    |
 | `per`         | How to format inverted units.              | `"reciprocal"` |
 
 The `per` parameter allows the following values:
 
-| Value          | Description                                                         |
-|----------------|---------------------------------------------------------------------|
-| `"reciprocal"` | Show unit as a product, inverted units have negative exponents.     |
-| `"fraction"`   | Show unit as a fraction.                                            |
-| `"{symbol}"`   | Show unit as an inline fraction with the given symbol as delimiter. |
+| Value          | Description                             |
+|----------------|-----------------------------------------|
+| `"reciprocal"` | Show unit with negative exponent.       |
+| `"fraction"`   | Show unit in denominator of a fraction. |
+| `"{symbol}"`   | Show unit after the given symbol.       |
 
-Keep in mind that the symbol is evaluated in math mode, so quotes, slashes and other symbols have to be escaped by a backslash.
+The symbol can be any content, for example a `math.slash` or `"/"` symbol. When using single letters, they are italicized by default, so it may be necessary to wrap them in `math.upright` to prevent this.
 
 #### Ranges
 
 | Parameter     | Description                                | Default Value  |
 |---------------|--------------------------------------------|----------------|
-| `delim`       | The delimiter between the numbers.         | `"\"to\""`     |
-| `delim-space` | The space between number and delimiter.    | `""`           |
+| `delim`       | The delimiter between the numbers.         | `"to"`         |
+| `delim-space` | The space between number and delimiter.    | `math.space`   |

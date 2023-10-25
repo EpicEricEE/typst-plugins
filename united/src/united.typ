@@ -55,9 +55,9 @@
 // - group-sep: The separator between digit groups.
 #let num(
   value,
-  product: "dot",
+  product: math.dot,
   decimal-sep: ".",
-  group-sep: "thin"
+  group-sep: math.thin
 ) = {
   let result = format-number(
     to-string(value),
@@ -66,7 +66,7 @@
     group-sep: group-sep
   )
 
-  eval(mode: "math", result)
+  $result$
 }
 
 // Format a unit.
@@ -77,7 +77,7 @@
 // - per: How to format fractions.
 #let unit(
   unit,
-  unit-sep: "thin",
+  unit-sep: math.thin,
   per: "reciprocal"
 ) = {
   let result = format-unit(
@@ -86,7 +86,7 @@
     per: per
   )
 
-  eval(mode: "math", result)
+  $result$
 }
 
 // Format a quantity (i.e. number with a unit).
@@ -102,10 +102,10 @@
 #let qty(
   value,
   unit,
-  product: "dot",
+  product: math.dot,
   decimal-sep: ".",
-  group-sep: "thin",
-  unit-sep: "thin",
+  group-sep: math.thin,
+  unit-sep: math.thin,
   per: "reciprocal"
 ) = {
   let result = format-number(
@@ -116,14 +116,14 @@
     follows-unit: true,
   )
 
-  result += " " + format-unit(
+  result += format-unit(
     to-string(unit),
     unit-sep: unit-sep,
     per: per,
     prefix-space: true
   )
 
-  eval(mode: "math", result)
+  $result$
 }
 
 // Format a range.
@@ -139,11 +139,11 @@
 #let numrange(
   lower, 
   upper,
-  product: "dot",
+  product: math.dot,
   decimal-sep: ".",
-  group-sep: "thin",
-  delim: "\"to\"",
-  delim-space: "",
+  group-sep: math.thin,
+  delim: "to",
+  delim-space: sym.space,
 ) = {
   let result = format-range(
     to-string(lower),
@@ -155,7 +155,7 @@
     delim-space: delim-space
   )
 
-  eval(mode: "math", result)
+  $result$
 }
 
 // Format a range with a unit.
@@ -175,12 +175,12 @@
   lower,
   upper,
   unit,
-  product: "dot",
+  product: math.dot,
   decimal-sep: ".",
-  group-sep: "thin",
-  delim: "\"to\"",
-  delim-space: "",
-  unit-sep: "thin",
+  group-sep: math.thin,
+  delim: "to",
+  delim-space: math.space,
+  unit-sep: math.thin,
   per: "reciprocal"
 ) = {
   let result = format-range(
@@ -194,13 +194,12 @@
     follows-unit: true,
   )
 
-  unit = to-string(unit)
-  result += " " + format-unit(
-    unit,
+  result += format-unit(
+    to-string(unit),
     unit-sep: unit-sep,
     per: per,
     prefix-space: true
   )
 
-  eval(mode: "math", result)
+  $result$
 }

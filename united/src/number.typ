@@ -109,7 +109,7 @@
 #let format-float(
   value,
   decimal-sep: ".",
-  group-sep: "thin"
+  group-sep: math.thin,
 ) = {
   value = str(value)
 
@@ -117,14 +117,14 @@
   let int-part = split.at(0)
   let dec-part = split.at(1, default: none)
 
-  let result = ""
+  let result = []
   
   // Append integer part.
-  let int-list = int-part.clusters()
-  result += int-list.remove(0)
-  for (i, digit) in int-list.enumerate() {
-    if calc.rem(int-list.len() - i, 3) == 0 {
-      result += " " + group-sep + " "
+  let digits = int-part.clusters()
+  result += digits.remove(0)
+  for (i, digit) in digits.enumerate() {
+    if calc.rem(digits.len() - i, 3) == 0 {
+      result += group-sep
     }
     result += digit
   }
@@ -132,19 +132,18 @@
   // Append decimal part.
   if dec-part != none {
     result += decimal-sep
-
-    let dec-list = dec-part.clusters()
-    for (i, digit) in dec-list.enumerate() {
+    let digits = dec-part.clusters()
+    for (i, digit) in digits.enumerate() {
       if i != 0 and calc.rem(i, 3) == 0 {
-        result += " " + group-sep + " "
+        result += group-sep
       }
       result += digit
     }
   }
 
+  show ",": math.class.with("normal") // Remove space after comma.
+  show "-": math.minus // Show proper minus sign instead of hyphen.
   result
-    .replace(",", ",#h(0pt)")
-    .replace(".", ".#h(0pt)")
 }
 
 // Format a number.
@@ -157,9 +156,9 @@
 // - follows-unit: Whether this number is followed by a unit.
 #let format-number(
   string,
-  product: "dot",
+  product: math.dot,
   decimal-sep: ".",
-  group-sep: "thin",
+  group-sep: math.thin,
   follows-unit: false
 ) = {
   let number = parse-number(string)
@@ -168,7 +167,7 @@
     group-sep: group-sep
   )
 
-  let result = ""
+  let result = []
 
   // Append main value.
   let uncertain = number.upper != none or number.lower != none
@@ -182,15 +181,18 @@
   // Append uncertainties.
   if number.upper != none and number.lower != none {
     if number.upper != number.lower {
-      result += "^(+" + format-float(number.upper) + ")"
-      result += "_(-" + format-float(number.lower) + ")"
+      result = math.attach(
+        result,
+        tr: math.plus + format-float(number.upper),
+        br: math.minus + format-float(number.lower)
+      )
     } else {
-      result += " plus.minus " + format-float(number.upper)
+      result += math.plus.minus + format-float(number.upper)
     }
   } else if number.upper != none {
-    result += " plus.minus " + format-float(number.upper)
+    result += math.plus.minus + format-float(number.upper)
   } else if number.lower != none {
-    result += " plus.minus " + format-float(number.lower)
+    result += math.plus.minus + format-float(number.lower)
   }
 
   // Wrap in brackets if necessary.
@@ -198,7 +200,7 @@
   let exponent-product = number.value != none and number.exponent != none
   let parentheses = uncertain and (follows-unit or exponent-product)
   if parentheses {
-    result = "lr((" + result + "))"
+    result = math.lr[(#result)]
   }
 
   // Append exponent.
@@ -206,10 +208,10 @@
     if number.value != none {
       // Same as above, don't show product if only the exponent is left.
       if number.value != "1" or uncertain or number.exponent == none {
-        result += " " + product + " "
+        result += product
       }
     }
-    result += "10^(" + format-float(number.exponent) + ")"
+    result += math.attach([10], tr: format-float(number.exponent))
   }
 
   result
@@ -229,11 +231,11 @@
 #let format-range(
   lower,
   upper,
-  product: "dot",
+  product: math.dot,
   decimal-sep: ".",
-  group-sep: "thin",
-  delim: "-",
-  delim-space: "thin",
+  group-sep: math.thin,
+  delim: "to",
+  delim-space: math.space,
   follows-unit: false,
 ) = {
   let lower = parse-number(lower)
@@ -242,8 +244,6 @@
     decimal-sep: decimal-sep,
     group-sep: group-sep
   )
-
-  let result = ""
 
   let common-exponent = {
     if lower.exponent == upper.exponent and lower.exponent != none {
@@ -254,22 +254,24 @@
     }
   }
 
+  let result = []
+
   // Append numbers and delimiter.
   // ! `format-number` takes a string, but these numbers are already parsed.
   // ! This is why `parse-number` includes a short-circuit for dictionaries.
   result += format-number(lower)
-  result += " " + delim-space + " " + delim + " " + delim-space + " "
+  result += [#delim-space] + math.upright(delim) + [#delim-space]
   result += format-number(upper)
 
   // Wrap in brackets if necessary.
   let parantheses = follows-unit or common-exponent != none
   if parantheses {
-    result = "lr((" + result + "))"
+    result = math.lr[(#result)]
   }
   
   // Append common exponent.
   if common-exponent != none {
-    result += " " + product + " 10^(" + common-exponent + ")"
+    result += product + math.attach([10], tr: common-exponent)
   }
 
   result

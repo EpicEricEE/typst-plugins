@@ -12,18 +12,14 @@
 // - per: How to format fractions.
 #let format-atoms(
   atoms,
-  unit-sep: "thin",
+  unit-sep: math.thin,
   per: "reciprocal"
 ) = {
   // Format a single atom.
   let format-atom(atom) = {
-    let result = ""
-    if atom.prefix != none {
-      result += atom.prefix + " "
-    }
-    result += atom.name
+    let result = [#atom.prefix#atom.name]
     if atom.exponent != "1" {
-      result += "^(" + atom.exponent + ")"
+      result = math.attach(result, tr: atom.exponent)
     }
     result
   }
@@ -32,7 +28,7 @@
   atoms = atoms.filter(atom => atom.exponent != "0")
 
   // Join atoms into a sequence with the unit space as separator.
-  let join(atoms) = atoms.map(format-atom).join(" " + unit-sep + " ")
+  let join(atoms) = atoms.map(format-atom).join[#unit-sep]
 
   if per == "reciprocal" {
     // Format as sequence of atoms with positive and negative exponents.
@@ -41,7 +37,7 @@
   
   // Partition atoms into normal and inverted ones and adjust exponents.
   let (normal, inverted) = atoms.fold(((), ()), (acc, unit) => {
-    let index = if unit.exponent.first() == "-" { 1 } else { 0 }
+    let index = if unit.exponent.first() == math.minus { 1 } else { 0 }
     acc.at(index).push((..unit, exponent: unit.exponent.slice(index)))
     acc
   })
@@ -55,13 +51,12 @@
   let denominator = join(inverted)
 
   if per == "fraction" {
-    return "(" + numerator + ") / (" + denominator + ")"
+    return math.frac(numerator, denominator)
   } else {
-    if per.trim() == "/" { per = "\/" }
     if inverted.len() > 1 { 
-      denominator = "(" + denominator + ")"
+      denominator = math.lr[(#denominator)]
     }
-    return numerator + " " + per + " " + denominator
+    return [#numerator#per#denominator]
   }
 }
 
@@ -79,7 +74,7 @@
 #let expect-short-atom(atom, inverted: false) = {
   let split = atom.split("^")
   let base = split.first()
-  let exponent = split.at(1, default: "1")
+  let exponent = split.at(1, default: "1").replace("-", math.minus)
 
   let unit = data.units-short.at(base, default: none)
   let space = data.units-short-space.at(base, default: true)
@@ -88,7 +83,7 @@
     // Check if unit is given in quotes.
     let match = base.match(regex("^'(.+)'$"))
     if match != none {
-      unit = "upright(\"" + match.captures.first() + "\")"
+      unit = math.upright(match.captures.first())
     }
   }
 
@@ -98,7 +93,7 @@
       prefix: none,
       name: unit,
       space: space,
-      exponent: if inverted { "-" } + exponent
+      exponent: if inverted { math.minus } + exponent
     )
   }
   
@@ -114,7 +109,7 @@
           prefix: data.prefixes-short.at(prefix),
           name: data.units-short.at(unit),
           space: data.units-short-space.at(unit),
-          exponent: if inverted { "-" } + exponent
+          exponent: if inverted { math.minus } + exponent
         )
       }
     }
@@ -189,7 +184,7 @@
     // Check if unit is given in quotes.
     let match = next.match(regex("^'(.+)'$"))
     if match != none {
-      unit = "upright(\"" + match.captures.first() + "\")"
+      unit = math.upright(match.captures.first())
     }
   }
   let space = data.units-space.at(next, default: true)
@@ -211,7 +206,7 @@
     prefix: prefix,
     name: unit,
     space: space,
-    exponent: if inverted { "-" } + exponent,
+    exponent: if inverted { math.minus } + exponent,
     word-count: word-count
   )
 }
@@ -254,7 +249,7 @@
 // - per: How to format unit fractions.
 #let format-unit(
   string,
-  unit-sep: "thin",
+  unit-sep: math.thin,
   per: "reciprocal",
   prefix-space: false,
 ) = {
@@ -272,7 +267,7 @@
   // Prefix with thin space if required.
   let result = format-atoms(atoms, unit-sep: unit-sep, per: per)
   if prefix-space and atoms.first().space {
-    result = "thin " + result
+    result = math.thin + result
   }
 
   result

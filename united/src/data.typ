@@ -1,3 +1,5 @@
+#let eval = eval.with(mode: "math")
+
 // Load a CSV file with prefixes.
 //
 // Parameters:
@@ -9,8 +11,8 @@
   let prefixes-short = (:)
 
   for (name, short, value) in array {
-    prefixes.insert(lower(name), value)
-    prefixes-short.insert(short, value)
+    prefixes.insert(lower(name), eval(value))
+    prefixes-short.insert(short, eval(value))
   }
 
   (prefixes, prefixes-short)
@@ -26,7 +28,7 @@
   let postfixes = (:)
 
   for (name, value) in array {
-    postfixes.insert(lower(name), value)
+    postfixes.insert(lower(name), eval(value))
   }
 
   postfixes
@@ -45,8 +47,8 @@
   let units-short-space = (:)
 
   for (name, short, value, space) in array {
-    units.insert(lower(name), value)
-    units-short.insert(short, value)
+    units.insert(lower(name), eval(value))
+    units-short.insert(short, eval(value))
 
     space = space in ("true", "1")
     units-space.insert(lower(name), space)
