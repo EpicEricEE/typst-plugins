@@ -52,10 +52,11 @@
     return join(normal)
   }
 
-  let numerator = if normal == () { "1" } else { join(normal) }
+  let numerator = join(normal)
   let denominator = join(inverted)
 
   if per == "fraction" {
+    if normal == () { numerator = "1" }
     return math.frac(numerator, denominator)
   } else {
     if inverted.len() > 1 { 
