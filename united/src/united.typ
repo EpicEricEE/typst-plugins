@@ -37,7 +37,7 @@
     } else if body.has("text") {
       // Text
       return to-string(body.text)
-    } else if body == [ ] {
+    } else if body == [ ] or repr(body.func()) == "space" {
       // Space
       return " "
     }
