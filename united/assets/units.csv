@@ -1,6 +1,7 @@
 ampere,A,upright("A"),true
 candela,cd,upright("cd"),true
 kelvin,K,upright("K"),true
+kelvin,K,upright("K"),true
 kilogram,kg,upright("kg"),true
 gram,g,upright("g"),true
 metre,m,upright("m"),true
@@ -22,6 +23,7 @@ lux,lx,upright("lx"),true
 newton,N,upright("N"),true
 ohm,ohm,Omega,true
 ohm,Ω,Omega,true
+ohm,Ω,Omega,true
 pascal,Pa,upright("Pa"),true
 radian,rad,upright("rad"),true
 siemens,S,upright("S"),true

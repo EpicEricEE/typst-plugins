@@ -3,7 +3,7 @@
 
 // Convert the argument to a string.
 //
-// The argument can be of type `int`, `float`, `str`, or `content`.
+// The argument can be of type `int`, `float`, `symbol`, `str`, or `content`.
 //
 // If the argument is of type `content`, it can be an `attach`, `frac`, `lr`,
 // `smartquote` or `text` element, or a sequence of these.
@@ -11,9 +11,9 @@
   if type(body) == str {
     // Strings
     return body.replace("\u{2212}", "-")
-  } else if type(body) in (int, float) {
-    // Numbers
-    return str(body)
+  } else if type(body) in (int, float, symbol) {
+    // Numbers and symbols
+    return to-string(str(body))
   } else if type(body) == content {
     if body.func() == math.attach {
       // Exponents
