@@ -55,8 +55,17 @@ $ pi approx num(3.14159) $
 | `decimal-sep` | The decimal separator.                     | `"."`          |
 | `group-sep`   | The separator between digit groups.        | `math.thin`    |
 | `product`     | The symbol to use for the exponent product | `math.dot`     |
+| `uncertainty` | How to format the uncertainty.             | `"plusminus"`  |
 
 When changing the group or decimal separator to `","`, the spacing is automatically trimmed. To disable digit grouping, set the `group-sep` parameter to `none`.
+
+The `uncertainty` parameter can be one of the following values:
+| Value           | Description                              | 
+|-----------------|------------------------------------------|
+| `"plusminus"`   | Show uncertainty with a plus-minus sign. |
+| `"parentheses"` | Show uncertainty in parentheses.         |
+
+When using the `parentheses` option, the main value and the uncertainty are automatically padded with zeros, so that the digits match without losing precision.
 
 #### Units
 

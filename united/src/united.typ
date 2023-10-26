@@ -51,17 +51,20 @@
 // Parameters:
 // - value: The number.
 // - product: The symbol to use for the exponent product.
+// - uncertainty: How to display uncertainties.
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
 #let num(
   value,
   product: math.dot,
+  uncertainty: "plusminus",
   decimal-sep: ".",
   group-sep: math.thin
 ) = {
   let result = format-number(
     to-string(value),
     product: product,
+    uncertainty: uncertainty,
     decimal-sep: decimal-sep,
     group-sep: group-sep
   )
@@ -95,6 +98,7 @@
 // - value: The number.
 // - unit: The unit.
 // - product: The symbol to use for the exponent product.
+// - uncertainty: How to display uncertainties.
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
 // - unit-sep: The separator between units.
@@ -103,6 +107,7 @@
   value,
   unit,
   product: math.dot,
+  uncertainty: "plusminus",
   decimal-sep: ".",
   group-sep: math.thin,
   unit-sep: math.thin,
@@ -111,6 +116,7 @@
   let result = format-number(
     to-string(value),
     product: product,
+    uncertainty: uncertainty,
     decimal-sep: decimal-sep,
     group-sep: group-sep,
     follows-unit: true,
@@ -132,6 +138,7 @@
 // - lower: The lower bound.
 // - upper: The upper bound.
 // - product: The symbol to use for the exponent product.
+// - uncertainty: How to display uncertainties.
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
 // - delim: Symbol between the numbers.
@@ -140,6 +147,7 @@
   lower, 
   upper,
   product: math.dot,
+  uncertainty: "plusminus",
   decimal-sep: ".",
   group-sep: math.thin,
   delim: "to",
@@ -149,6 +157,7 @@
     to-string(lower),
     to-string(upper),
     product: product,
+    uncertainty: uncertainty,
     decimal-sep: decimal-sep,
     group-sep: group-sep,
     delim: delim,
@@ -165,6 +174,7 @@
 // - upper: The upper bound.
 // - unit: The unit.
 // - product: The symbol to use for the exponent product.
+// - uncertainty: How to display uncertainties.
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
 // - delim: Symbol between the numbers.
@@ -176,6 +186,7 @@
   upper,
   unit,
   product: math.dot,
+  uncertainty: "plusminus",
   decimal-sep: ".",
   group-sep: math.thin,
   delim: "to",
@@ -187,6 +198,7 @@
     to-string(lower),
     to-string(upper),
     product: product,
+    uncertainty: uncertainty,
     decimal-sep: decimal-sep,
     group-sep: group-sep,
     delim: delim,

@@ -8,6 +8,8 @@
 //
 // Parameters:
 // - product: The symbol to use for the exponent product.
+// - uncertainty: How to display uncertainties. Can be "plusminus" or
+//   "parentheses".
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
 // - delim: Delimiter between numbers in a range.
@@ -24,6 +26,7 @@
 // - qtyrange: A function that formats quantity ranges.
 #let with(
   product: math.dot,
+  uncertainty: "plusminus",
   decimal-sep: ".",
   group-sep: math.thin,
   delim: "to",
@@ -33,12 +36,14 @@
 ) = (
   num: num.with(
     product: product,
+    uncertainty: uncertainty,
     decimal-sep: decimal-sep,
     group-sep: group-sep
   ),
 
   qty: qty.with(
     product: product,
+    uncertainty: uncertainty,
     decimal-sep: decimal-sep,
     group-sep: group-sep,
     unit-sep: unit-sep,
@@ -52,6 +57,7 @@
 
   numrange: numrange.with(
     product: product,
+    uncertainty: uncertainty,
     decimal-sep: decimal-sep,
     group-sep: group-sep,
     delim: delim,
@@ -60,6 +66,7 @@
 
   qtyrange: qtyrange.with(
     product: product,
+    uncertainty: uncertainty,
     decimal-sep: decimal-sep,
     group-sep: group-sep,
     delim: delim,

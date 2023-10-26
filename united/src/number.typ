@@ -159,17 +159,24 @@
 // Parameters:
 // - string: The string containing the number.
 // - product: The symbol to use for the exponent product.
+// - uncertainty: How to display uncertainties.
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
 // - follows-unit: Whether this number is followed by a unit.
 #let format-number(
   string,
   product: math.dot,
+  uncertainty: "plusminus",
   decimal-sep: ".",
   group-sep: math.thin,
   follows-unit: false
 ) = {
-  let number = parse-number(string)
+  assert(
+    uncertainty in ("plusminus", "parentheses"),
+    message: "invalid uncertainty mode: " + uncertainty
+  )
+
+  let (value, exponent, lower, upper) = parse-number(string)
   let format-float = format-float.with(
     decimal-sep: decimal-sep,
     group-sep: group-sep
@@ -178,43 +185,63 @@
   let result = []
 
   // Append main value.
-  let uncertain = number.upper != none or number.lower != none
-  if number.value != none {
+  let uncertain = upper != none or lower != none
+  if value != none {
     // Don't show value if it is 1 and there is an exponent.
-    if number.value != "1" or uncertain or number.exponent == none {
-      result += format-float(number.value)
+    if value != "1" or uncertain or exponent == none {
+      result += format-float(value)
     }
   }
 
   // Append uncertainties.
-  if number.upper != none and number.lower not in (none, number.upper) {
+  if upper != none and lower not in (none, upper) {
+    // Always use plus/minus if uncertainties are different.
     result = math.attach(
       result,
-      tr: math.plus + format-float(number.upper),
-      br: math.minus + format-float(number.lower)
+      tr: math.plus + format-float(upper),
+      br: math.minus + format-float(lower)
     )
-  } else if number.upper != none or number.lower != none {
-    let error = if number.upper != none { number.upper } else { number.lower }
-    result += math.plus.minus + format-float(error)
+  } else if upper != none or lower != none {
+    let error = if upper != none { upper } else { lower }
+
+    result += if uncertainty == "plusminus" {
+      math.plus.minus + format-float(error)
+    } else {
+      // Pad with zeros to match lengths of decimals.
+      let decimal-len = value.rev().position(".")
+      let error-decimal-len = error.rev().position(".")
+      if decimal-len == none { decimal-len = 0 }
+      if error-decimal-len == none { error-decimal-len = 0 }
+
+      if decimal-len < error-decimal-len {
+        if decimal-len == 0 [#decimal-sep]
+        "0" * (error-decimal-len - decimal-len)
+      } else if error-decimal-len < decimal-len {
+        error += "0" * (decimal-len - error-decimal-len)
+      }
+      
+      math.lr[(#error.replace(".", "").trim("0", at: start))]
+    }
   }
 
   // Wrap in brackets if necessary.
-  let uncertain = number.upper != none or number.lower != none
-  let exponent-product = number.value != none and number.exponent != none
-  let parentheses = uncertain and (follows-unit or exponent-product)
+  let uncertain = upper != none or lower != none
+  let plusminus = uncertainty == "plusminus" or upper != lower
+  let exponent-product = value != none and exponent != none
+  let parentheses = uncertain and plusminus and (follows-unit or exponent-product)
   if parentheses {
     result = math.lr[(#result)]
   }
 
   // Append exponent.
-  if number.exponent != none {
-    if number.value != none {
+  if exponent != none {
+    if value != none {
       // Same as above, don't show product if only the exponent is left.
-      if number.value != "1" or uncertain or number.exponent == none {
+      if value != "1" or uncertain or exponent == none {
         result += product
       }
     }
-    result += math.attach([10], tr: format-float(number.exponent))
+    result += math.attach([10], tr: format-float(exponent))
   }
 
   result
@@ -226,6 +253,7 @@
 // - lower: The string containing the lower bound.
 // - upper: The string containing the upper bound.
 // - product: The symbol to use for the exponent product.
+// - uncertainty: How to display uncertainties.
 // - decimal-sep: The decimal separator.
 // - group-sep: The separator between digit groups.
 // - delim: Symbol between the numbers.
@@ -235,6 +263,7 @@
   lower,
   upper,
   product: math.dot,
+  uncertainty: "plusminus",
   decimal-sep: ".",
   group-sep: math.thin,
   delim: "to",
@@ -243,9 +272,18 @@
 ) = {
   let lower = parse-number(lower)
   let upper = parse-number(upper)
+
   let format-float = format-float.with(
     decimal-sep: decimal-sep,
     group-sep: group-sep
+  )
+
+  let format-number = format-number.with(
+    product: product,
+    uncertainty: uncertainty,
+    decimal-sep: decimal-sep,
+    group-sep: group-sep,
+    follows-unit: follows-unit
   )
 
   let common-exponent = {
