@@ -187,20 +187,15 @@
   }
 
   // Append uncertainties.
-  if number.upper != none and number.lower != none {
-    if number.upper != number.lower {
-      result = math.attach(
-        result,
-        tr: math.plus + format-float(number.upper),
-        br: math.minus + format-float(number.lower)
-      )
-    } else {
-      result += math.plus.minus + format-float(number.upper)
-    }
-  } else if number.upper != none {
-    result += math.plus.minus + format-float(number.upper)
-  } else if number.lower != none {
-    result += math.plus.minus + format-float(number.lower)
+  if number.upper != none and number.lower not in (none, number.upper) {
+    result = math.attach(
+      result,
+      tr: math.plus + format-float(number.upper),
+      br: math.minus + format-float(number.lower)
+    )
+  } else if number.upper != none or number.lower != none {
+    let error = if number.upper != none { number.upper } else { number.lower }
+    result += math.plus.minus + format-float(error)
   }
 
   // Wrap in brackets if necessary.
