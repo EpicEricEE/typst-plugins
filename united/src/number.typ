@@ -177,6 +177,8 @@
   )
 
   let (value, exponent, lower, upper) = parse-number(string)
+  if exponent == "0" { exponent = none }
+
   let format-float = format-float.with(
     decimal-sep: decimal-sep,
     group-sep: group-sep
