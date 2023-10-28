@@ -12,7 +12,8 @@ The package comes with a single `dropcap` function that takes content and a few 
 | `gutter`         | The space between the first letter and the text. | `0pt`   |
 | `..text-args`    | Arguments to be passed to the text function.     | `(:)`   |
 
-The `justify` parameter can not yet be retrieved from the current style context, so it must be set manually.
+> [!NOTE]
+> Show and set rules applied inside the content passed to the `dropcap` function do not work!
 
 ## Example
 ```typ
