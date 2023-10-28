@@ -42,7 +42,7 @@ Every function has a multitude of optional parameters intended for customizing t
 For ease of use, the package comes with a convenience function, that allows setting the same parameters for all functions at once. The following example shows how to set the decimal separator to a comma:
 
 ```typ
-#import "@preview/united:0.1.0"
+#import "@local/united:0.1.0"
 #let (num, qty) = united.with(decimal-sep: ",")
 
 $ pi approx num(3.14159) $
