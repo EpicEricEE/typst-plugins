@@ -25,7 +25,8 @@ The `justify` parameter can not yet be retrieved from the current style context,
   justify: true,
   font: "Curlz MT",
 )[
-  *Typst* is a new markup-based typesetting system that is designed to be as _powerful_ as LaTeX while being _much easier_ to learn and use. Typst has:
+  *Typst* is a new markup-based typesetting system that is designed to be as
+  _powerful_ as LaTeX while being _much easier_ to learn and use. Typst has:
   
   - Built-in markup for the most common formatting tasks
   - Flexible functions for everything else
