@@ -1,0 +1,9 @@
+[package]
+name = "dropcap"
+version = "0.1.0"
+entrypoint = "src/lib.typ"
+authors = ["Eric Biedert"]
+repository = "https://github.com/EpicEricEE/typst-plugins"
+license = "MIT"
+description = "Dropped capitals: Large initial letters."
+exclude = ["README.md", "assets/**"]
