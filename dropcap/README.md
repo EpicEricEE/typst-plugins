@@ -4,13 +4,13 @@ A package for creating dropped capitals in typst.
 ## Usage
 The package comes with a single `dropcap` function that takes content and a few optional parameters. The first letter of the content will be shown as a dropped capital, while the rest of the content will be wrapped around it. The parameters are as follows:
 
-| Parameter        | Description                                      | Default |
-|------------------|--------------------------------------------------|---------|
-| `lines`          | The height of the dropped capital in lines.      | `2`     |
-| `justify`        | Whether the text should be justified.            | `false` |
-| `hanging-indent` | The indent of lines after the first.             | `8pt`   |
-| `gutter`         | The space between the first letter and the text. | `0pt`   |
-| `..text-args`    | Arguments to be passed to the text function.     | `(:)`   |
+| Parameter        | Description                                              | Default |
+|------------------|----------------------------------------------------------|---------|
+| `height`         | The height of the dropped capital in lines or as length. | `2`     |
+| `justify`        | Whether the text should be justified.                    | `false` |
+| `hanging-indent` | The indent of lines after the first.                     | `8pt`   |
+| `gutter`         | The space between the first letter and the text.         | `0pt`   |
+| `..text-args`    | Arguments to be passed to the text function.             | `(:)`   |
 
 > [!NOTE]
 > Show and set rules applied inside the content passed to the `dropcap` function do not work!

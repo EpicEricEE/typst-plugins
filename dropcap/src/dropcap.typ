@@ -175,7 +175,8 @@
 // that the content is wrapped around the first letter.
 //
 // Parameters:
-// - lines: The height of the first letter in lines.
+// - height: The height of the first letter. Can be given as the number of
+//           lines (integer) or as a length.
 // - justify: Whether to justify the text next to the first letter.
 // - hanging-indent: The indent of lines after the first line.
 // - gutter: The space between the first letter and the text.
@@ -184,7 +185,7 @@
 //
 // Returns: The content with the first letter shown in a larger font.
 #let dropcap(
-  lines: 2,
+  height: 2,
   justify: false,
   hanging-indent: 8pt,
   gutter: 0pt,
@@ -195,8 +196,12 @@
   let (letter, rest) = extract-first-letter(body)
 
   // Sample content for height of given amount of lines
-  let sample-lines = range(lines).map(_ => [x]).join(linebreak())
-  let letter-height = measure(sample-lines, styles).height
+  let letter-height = if type(height) == int {
+    let sample-lines = range(height).map(_ => [x]).join(linebreak())
+    measure(sample-lines, styles).height
+  } else {
+    measure(v(height), styles).height
+  }
 
   // Create dropcap with the height of sample content
   let letter = sized(letter-height, letter, ..text-args)
@@ -220,7 +225,7 @@
     }
 
     // Allow a bit more space to accommodate for larger elements.
-    let max-height = letter-height * (lines + 0.5) / lines
+    let max-height = letter-height + measure([x], styles).height / 2
     let height = measure(bounded(first), styles).height    
     if height > max-height {
       split(rest, index - 1)
@@ -237,11 +242,11 @@
     column-gutter: gutter,
     columns: (letter-width, 1fr),
     letter,
-    [
-      #set par(hanging-indent: hanging-indent)
-      #first
-      #if second != none { linebreak(justify: justify) }
-    ]
+    {
+      set par(hanging-indent: hanging-indent)
+      first
+      if second != none { linebreak(justify: justify) }
+    }
   ))
   
   second
