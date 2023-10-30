@@ -1,6 +1,9 @@
 // Element function for space.
 #let space = [ ].func()
 
+// Elements that can be split and have a 'body' field.
+#let splittable = (strong, emph, underline, stroke, overline, highlight)
+
 // Sets the font size so the resulting text height matches the given height.
 //
 // If not specified otherwise in "text-args", the top and bottom edge of the
@@ -55,7 +58,7 @@
     return (letter, func(rest))
   }
 
-  if body.has("body") {
+  if body.func() in splittable {
     let (body: text, ..fields) = body.fields()
     let func = body.func().with(..fields)
     let (letter, rest) = extract-first-letter(text)
@@ -96,7 +99,7 @@
     size(body.child)
   } else if body.has("children") {
     body.children.map(size).sum()
-  } else if body.func() in (strong, emph, underline, stroke, overline) {
+  } else if body.func() in splittable {
     size(body.body)
   } else {
     1
@@ -127,7 +130,7 @@
     return (func(first), func(second))
   }
 
-  if body.func() in (strong, emph, underline, stroke, overline) {
+  if body.func() in splittable {
     let (body: text, ..fields) = body.fields()
     let func(it) = if it != none { body.func()(..fields, it) }
     let (first, second) = split(text, index)
