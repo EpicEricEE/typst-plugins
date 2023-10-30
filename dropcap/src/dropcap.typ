@@ -40,11 +40,11 @@
 // Returns: A tuple of the first letter and the rest.
 #let extract-first-letter(body) = {
   if type(body) == str {
-    let letter = body.at(0, default: none)
+    let letter = body.clusters().at(0, default: none)
     if letter == none {
       return (none, body)
     }
-    let rest = body.slice(1)
+    let rest = body.clusters().slice(1).join()
     return (letter, rest)
   }
 
