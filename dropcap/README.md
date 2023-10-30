@@ -10,6 +10,7 @@ The package comes with a single `dropcap` function that takes content and a few 
 | `justify`        | Whether the text should be justified.                    | `false` |
 | `hanging-indent` | The indent of lines after the first.                     | `8pt`   |
 | `gutter`         | The space between the first letter and the text.         | `0pt`   |
+| `transform`      | A function to be applied to the first letter.            | `none`  |
 | `..text-args`    | Arguments to be passed to the text function.             | `(:)`   |
 
 > [!NOTE]

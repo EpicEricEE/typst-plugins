@@ -180,6 +180,7 @@
 // - justify: Whether to justify the text next to the first letter.
 // - hanging-indent: The indent of lines after the first line.
 // - gutter: The space between the first letter and the text.
+// - transform: A function to be applied to the first letter.
 // - text-args: Arguments to be passed to the underlying text element.
 // - body: The content to be shown.
 //
@@ -189,11 +190,15 @@
   justify: false,
   hanging-indent: 8pt,
   gutter: 0pt,
+  transform: none,
   ..text-args,
   body
 ) = layout(bounds => style(styles => {  
   // Split body into first letter and rest of string
   let (letter, rest) = extract-first-letter(body)
+  if transform != none {
+    letter = transform(letter)
+  }
 
   // Sample content for height of given amount of lines
   let letter-height = if type(height) == int {
