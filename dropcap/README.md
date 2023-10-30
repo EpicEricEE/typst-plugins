@@ -21,7 +21,7 @@ The package comes with a single `dropcap` function that takes content and a few 
 #import "@local/dropcap:0.1.0": dropcap
 
 #dropcap(
-  lines: 3,
+  height: 3,
   gutter: 4pt,
   hanging-indent: 1em,
   justify: true,
