@@ -36,6 +36,23 @@
   return text(size: size)
 })
 
+// Attaches a label after the split elements.
+//
+// The label is only attached to one of the elements, preferring the second
+// one. If both elements are empty, the label is discarded. If the label is
+// empty, the elements remain unchanged.
+#let attach-label((first, second), label) = {
+  if label == none {
+    (first, second)
+  } else if second != none {
+    (first, [#second#label])
+  } else if first != none {
+    ([#first#label], second)
+  } else {
+    (none, none)
+  }
+}
+
 // Tries to extract the first letter of the given content.
 //
 // If the first letter cannot be extracted, the whole body is returned as rest.
@@ -53,16 +70,18 @@
 
   if body.has("text") {
     let (text, ..fields) = body.fields()
-    let func = body.func().with(..fields)
+    let label = if "label" in fields { fields.remove("label") }
+    let func(it) = if it != none { body.func()(..fields, it) }
     let (letter, rest) = extract-first-letter(body.text)
-    return (letter, func(rest))
+    return attach-label((letter, func(rest)), label)
   }
 
   if body.func() in splittable {
     let (body: text, ..fields) = body.fields()
-    let func = body.func().with(..fields)
+    let label = if "label" in fields { fields.remove("label") }
+    let func(it) = if it != none { body.func()(..fields, it) }
     let (letter, rest) = extract-first-letter(text)
-    return (letter, func(rest))  
+    return attach-label((letter, func(rest)), label)
   }
 
   if body.has("child") {
@@ -125,16 +144,18 @@
 
   if body.has("text") {
     let (text, ..fields) = body.fields()
+    let label = if "label" in fields { fields.remove("label") }
     let func(it) = if it != none { body.func()(..fields, it) }
     let (first, second) = split(text, index)
-    return (func(first), func(second))
+    return attach-label((func(first), func(second)), label)
   }
 
   if body.func() in splittable {
     let (body: text, ..fields) = body.fields()
+    let label = if "label" in fields { fields.remove("label") }
     let func(it) = if it != none { body.func()(..fields, it) }
     let (first, second) = split(text, index)
-    return (func(first), func(second))
+    return attach-label((func(first), func(second)), label)
   }
 
   if body.has("child") {
