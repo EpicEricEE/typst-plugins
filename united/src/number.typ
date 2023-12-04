@@ -284,8 +284,7 @@
     product: product,
     uncertainty: uncertainty,
     decimal-sep: decimal-sep,
-    group-sep: group-sep,
-    follows-unit: follows-unit
+    group-sep: group-sep
   )
 
   let common-exponent = {
