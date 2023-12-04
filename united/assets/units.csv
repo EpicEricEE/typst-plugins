@@ -10,7 +10,7 @@ mole,mol,upright("mol"),true
 second,s,upright("s"),true
 
 becquerel,Bq,upright("Bq"),true
-celsius,°C,degree.c,false
+celsius,°C,degree.c,true
 coulomb,C,upright("C"),true
 farad,F,upright("F"),true
 gray,Gy,upright("Gy"),true
@@ -62,7 +62,7 @@ year,a,upright("a"),true
 year,yr,upright("a"),true
 percent,%,percent,true
 
-fahrenheit,°F,degree.f,false
+fahrenheit,°F,degree.f,true
 inch,in,upright("in"),true
 foot,ft,upright("ft"),true
 mile,mi,upright("mi"),true
