@@ -14,7 +14,7 @@
   ),
 )
 
-#show: outex
+#show outline: outex
 #show heading: set block(below: 1em)
 
 #outline(title: "Table of Contents")
