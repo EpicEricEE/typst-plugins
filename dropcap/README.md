@@ -16,20 +16,19 @@ The package comes with a single `dropcap` function that takes content and a few 
 > [!NOTE]
 > Show and set rules applied inside the content passed to the `dropcap` function do not work!
 
-## Example
 ```typ
 #import "@local/dropcap:0.1.0": dropcap
 
 #dropcap(
   height: 3,
-  gutter: 4pt,
-  hanging-indent: 1em,
   justify: true,
+  hanging-indent: 1em,
+  gutter: 4pt,
   font: "Curlz MT",
 )[
   *Typst* is a new markup-based typesetting system that is designed to be as
   _powerful_ as LaTeX while being _much easier_ to learn and use. Typst has:
-  
+
   - Built-in markup for the most common formatting tasks
   - Flexible functions for everything else
   - A tightly integrated scripting system
@@ -40,3 +39,35 @@ The package comes with a single `dropcap` function that takes content and a few 
 ```
 
 ![Result of example code.](assets/example.svg)
+
+## Extended Customization
+To further customize the appearance of the dropped capital, you can apply a `transform` function, which takes the first letter as a string and returns the content to be shown. The font size of the letter is then scaled so that the height of the transformed content matches the given height.
+
+```typ
+#import "@local/dropcap:0.1.0": dropcap
+
+#dropcap(
+  height: 2,
+  justify: true,
+  hanging-indent: 0pt,
+  gutter: 6pt,
+  transform: letter => style(styles => {
+    let height = measure(letter, styles).height
+
+    grid(columns: 2, gutter: 6pt,
+      align(center + horizon, text(blue, letter)),
+      // Use "place" to ignore the line's height when
+      // the font size is calculated later on.
+      place(horizon, line(
+        angle: 90deg,
+        length: height + 6pt,
+        stroke: blue.lighten(40%) + 1pt
+      )),
+    )
+  }),
+  lorem(21)
+)
+
+```
+
+![Result of example code.](assets/example-transform.svg)

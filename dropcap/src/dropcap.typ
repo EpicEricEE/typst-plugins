@@ -32,7 +32,7 @@
     size *= 1 + (height - font-height) / font-height
     font-height = measure(text(size: size), styles).height
   }
-  
+
   return text(size: size)
 })
 
@@ -172,7 +172,7 @@
     for (i, child) in body.children.enumerate() {
       let child-size = size(child)
       index -= child-size
-      
+
       if index <= 0 {
         // Current child contains splitting point.
         let sub-index = child-size + index
@@ -186,7 +186,7 @@
       }
     }
 
-    return (first.join[], second.join[])
+    return (first.join(), second.join())
   }
 
   // Element cannot be split, so put everything in second part.
@@ -266,7 +266,7 @@
 
   // Layout dropcap and aside text as grid
   set par(justify: justify)
-  
+
   box(grid(
     column-gutter: gutter,
     columns: (letter-width, 1fr),
@@ -277,6 +277,6 @@
       if second != none { linebreak(justify: justify) }
     }
   ))
-  
+
   second
 }))
