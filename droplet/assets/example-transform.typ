@@ -17,7 +17,6 @@
   height: 2,
   justify: true,
   gap: 6pt,
-  hanging-indent: 0pt,
   transform: letter => style(styles => {
     let height = measure(letter, styles).height
 

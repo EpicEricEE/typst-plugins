@@ -213,7 +213,7 @@
   height: 2,
   justify: false,
   gap: 0pt,
-  hanging-indent: 8pt,
+  hanging-indent: 0pt,
   transform: none,
   ..text-args,
   body
