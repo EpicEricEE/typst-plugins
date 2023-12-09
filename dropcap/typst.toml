@@ -5,5 +5,9 @@ entrypoint = "src/lib.typ"
 authors = ["Eric Biedert"]
 repository = "https://github.com/EpicEricEE/typst-plugins"
 license = "MIT"
-description = "Dropped capitals: Large initial letters."
+description = "Customizable dropped capitals."
 exclude = ["README.md", "assets"]
+keywords = [
+  "drop", "dropped", "big", "large", "caps", "capital", "capitals",
+  "initial", "initials", "letter", "letters", "lettrine"
+]
