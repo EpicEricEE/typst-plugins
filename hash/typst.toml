@@ -7,4 +7,4 @@ license = "MIT"
 description = "Implementation of multiple hashing algorithms."
 repository = "https://github.com/EpicEricEE/typst-plugins"
 compiler = "0.8.0"
-exclude = ["README.md", "bin/**", "assets/**"]
+exclude = ["README.md", "bin", "assets"]

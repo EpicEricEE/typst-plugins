@@ -6,4 +6,4 @@ authors = ["Eric Biedert"]
 repository = "https://github.com/EpicEricEE/typst-plugins"
 license = "MIT"
 description = "Dropped capitals: Large initial letters."
-exclude = ["README.md", "assets/**"]
+exclude = ["README.md", "assets"]
