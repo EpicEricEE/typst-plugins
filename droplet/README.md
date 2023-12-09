@@ -1,4 +1,4 @@
-# dropcap
+# droplet
 A package for creating dropped capitals in typst.
 
 ## Usage
@@ -17,7 +17,7 @@ The package comes with a single `dropcap` function that takes content and a few 
 > Show and set rules applied inside the content passed to the `dropcap` function do not work!
 
 ```typ
-#import "@local/dropcap:0.1.0": dropcap
+#import "@preview/droplet:0.1.0": dropcap
 
 #dropcap(
   height: 3,
@@ -44,7 +44,7 @@ The package comes with a single `dropcap` function that takes content and a few 
 To further customize the appearance of the dropped capital, you can apply a `transform` function, which takes the first letter as a string and returns the content to be shown. The font size of the letter is then scaled so that the height of the transformed content matches the given height.
 
 ```typ
-#import "@local/dropcap:0.1.0": dropcap
+#import "@preview/droplet:0.1.0": dropcap
 
 #dropcap(
   height: 2,

@@ -1,5 +1,5 @@
 [package]
-name = "dropcap"
+name = "droplet"
 version = "0.1.0"
 entrypoint = "src/lib.typ"
 authors = ["Eric Biedert"]
@@ -8,6 +8,6 @@ license = "MIT"
 description = "Customizable dropped capitals."
 exclude = ["README.md", "assets"]
 keywords = [
-  "drop", "dropped", "big", "large", "caps", "capital", "capitals",
+  "drop", "dropped", "dropcap", "big", "large", "caps", "capital", "capitals",
   "initial", "initials", "letter", "letters", "lettrine"
 ]
