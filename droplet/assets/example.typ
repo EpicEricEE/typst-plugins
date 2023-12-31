@@ -2,9 +2,9 @@
 
 #set text(size: 14pt)
 #set page(
-  width: 11cm,
+  width: 11cm + 16pt,
   height: auto,
-  margin: 1em,
+  margin: (x: 1em + 8pt, y: 1em),
   background: box(
     width: 100%,
     height: 100%,
@@ -18,6 +18,7 @@
   justify: true,
   gap: 4pt,
   hanging-indent: 1em,
+  overhang: 8pt,
   font: "Curlz MT",
 )[
   *Typst* is a new markup-based typesetting system that is designed to be as _powerful_ as LaTeX while being _much easier_ to learn and use. Typst has:

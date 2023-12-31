@@ -217,6 +217,8 @@
 // - justify: Whether to justify the text next to the first letter.
 // - gap: The space between the first letter and the text.
 // - hanging-indent: The indent of lines after the first line.
+// - overhang: The amount by which the first letter should overhang into the
+//             margin. Ratios are relative to the width of the first letter.
 // - transform: A function to be applied to the first letter.
 // - text-args: Arguments to be passed to the underlying text element.
 // - body: The content to be shown.
@@ -227,17 +229,18 @@
   justify: false,
   gap: 0pt,
   hanging-indent: 0pt,
+  overhang: 0pt,
   transform: none,
   ..text-args,
   body
 ) = layout(bounds => style(styles => {  
-  // Split body into first letter and rest of string
+  // Split body into first letter and rest of string.
   let (letter, rest) = extract-first-letter(body)
   if transform != none {
     letter = transform(letter)
   }
 
-  // Sample content for height of given amount of lines
+  // Sample content for height of given amount of lines.
   let letter-height = if type(height) == int {
     let sample-lines = range(height).map(_ => [x]).join(linebreak())
     measure(sample-lines, styles).height
@@ -245,12 +248,21 @@
     measure(v(height), styles).height
   }
 
-  // Create dropcap with the height of sample content
+  // Create dropcap with the height of sample content.
   let letter = sized(letter-height, letter, ..text-args)
   let letter-width = measure(letter, styles).width
 
-  // Try to justify as many words as possible next to dropcap
-  let bounded = box.with(width: bounds.width - letter-width - gap)
+  // Resolve overhang if given as percentage.
+  let overhang = if type(overhang) == ratio {
+    letter-width * overhang
+  } else if type(overhang) == relative {
+    letter-width * overhang.ratio + overhang.length
+  } else {
+    overhang
+  }
+
+  // Try to justify as many words as possible next to dropcap.
+  let bounded = box.with(width: bounds.width - letter-width - gap + overhang)
 
   let index = 1
   let (first, second) = while true {
@@ -277,13 +289,13 @@
     index += 1
   }
 
-  // Layout dropcap and aside text as grid
+  // Layout dropcap and aside text as grid.
   set par(justify: justify)
 
   box(grid(
     column-gutter: gap,
-    columns: (letter-width, 1fr),
-    letter,
+    columns: (letter-width - overhang, 1fr),
+    move(dx: -overhang, letter),
     {
       set par(hanging-indent: hanging-indent)
       first
