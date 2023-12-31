@@ -2,7 +2,7 @@
 A package for creating dropped capitals in typst.
 
 ## Usage
-The package comes with a single `dropcap` function that takes content and a few optional parameters. The first letter of the content will be shown as a dropped capital, while the rest of the content will be wrapped around it. The parameters are as follows:
+The package comes with a single `dropcap` function that takes content and a few optional parameters. The first letter can either be passed as a positional parameter, or is automatically extracted from the passed body. The rest of the content will be wrapped around the dropped capital by splitting it into two paragraphs. The parameters are as follows:
 
 | Parameter        | Description                                                       | Default |
 |------------------|-------------------------------------------------------------------|---------|
@@ -12,7 +12,7 @@ The package comes with a single `dropcap` function that takes content and a few 
 | `hanging-indent` | The indent of lines after the first.                              | `0pt`   |
 | `overhang`       | The amount by which the first letter should hang into the margin. | `0pt`   |
 | `transform`      | A function to be applied to the first letter.                     | `none`  |
-| `..text-args`    | Arguments to be passed to the text function.                      | `(:)`   |
+| `..text-args`    | Named arguments to be passed to the text function.                      | `(:)`   |
 
 > [!NOTE]
 > Show and set rules applied inside the content passed to the `dropcap` function do not work!

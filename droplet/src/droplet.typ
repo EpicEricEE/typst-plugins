@@ -212,8 +212,9 @@
 
 // Shows the first letter of the given content in a larger font.
 //
-// The first letter is extracted from the content, and the content is split, so
-// that the content is wrapped around the first letter.
+// If the first letter is not given as a positional argument, it is extracted
+// from the content. The rest of the content is split into two pieces, where
+// one is positioned next to the dropped capital, and the other below it.
 //
 // Parameters:
 // - height: The height of the first letter. Can be given as the number of
@@ -224,7 +225,7 @@
 // - overhang: The amount by which the first letter should overhang into the
 //             margin. Ratios are relative to the width of the first letter.
 // - transform: A function to be applied to the first letter.
-// - text-args: Arguments to be passed to the underlying text element.
+// - text-args: Named arguments to be passed to the underlying text element.
 // - body: The content to be shown.
 //
 // Returns: The content with the first letter shown in a larger font.
@@ -238,8 +239,14 @@
   ..text-args,
   body
 ) = layout(bounds => style(styles => {  
-  // Split body into first letter and rest of string.
-  let (letter, rest) = extract-first-letter(body)
+  let (letter, rest) = if text-args.pos() == () {
+    // Split body into first letter and rest of string.
+    extract-first-letter(body)
+  } else {
+    // First letter already given.
+    (text-args.pos().first(), body)
+  }
+
   if transform != none {
     letter = transform(letter)
   }
@@ -253,7 +260,7 @@
   }
 
   // Create dropcap with the height of sample content.
-  let letter = sized(letter-height, letter, ..text-args)
+  let letter = sized(letter-height, letter, ..text-args.named())
   let letter-width = measure(letter, styles).width
 
   // Resolve overhang if given as percentage.
