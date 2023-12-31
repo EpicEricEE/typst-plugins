@@ -62,8 +62,8 @@
 
   // Handle enumeration items (interpreted as text, e.g. "5. Body" or "+ Body")
   if body.func() == enum.item {
-    let body = body.body
-    let number = body.fields().at("number", default: none)
+    let (body, ..fields) = body.fields()
+    let number = fields.at("number", default: none)
     return if number == none {
       ("+", body)
     } else if number < 10 {

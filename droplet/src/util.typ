@@ -20,7 +20,11 @@
     // Unfortunately, we can only use "dumb" quotes here.
     if body.double { "\"" } else { "'" }
   } else if body.func() == enum.item {
-    str(body.number) + "."
+    if body.has("number") {
+      str(body.number) + ". " + to-string(body.body)
+    } else {
+      "+ " + to-string(body.body)
+    }
   } else if body.func() == space {
     " "
   } else {
