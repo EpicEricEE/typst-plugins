@@ -120,6 +120,8 @@
     body.children.map(size).sum()
   } else if body.func() in splittable {
     size(body.body)
+  } else if body.func() == space {
+    0
   } else {
     1
   }
@@ -169,14 +171,25 @@
     let second = ()
 
     // Find child containing the splitting point and split it.
+    let new-index = index
     for (i, child) in body.children.enumerate() {
       let child-size = size(child)
-      index -= child-size
+      new-index -= child-size
 
-      if index <= 0 {
+      if new-index <= 0 {
         // Current child contains splitting point.
-        let sub-index = child-size + index
+        let sub-index = child-size + new-index
         let (child-first, child-second) = split(child, sub-index)
+
+        if child-second == none {
+          // Split is at the end of the child, so check if next child is space.
+          let next = body.children.at(i + 1, default: [ ])
+          if next.func() != space {
+            // Cannot split here, so split at previous break point.
+            return split(body, index - 1)
+          }
+        }
+
         first.push(child-first)
         second.push(child-second)
         second += body.children.slice(i + 1) // Add remaining children
@@ -189,8 +202,8 @@
     return (first.join(), second.join())
   }
 
-  // Element cannot be split, so put everything in second part.
-  return (none, body)
+  // Element cannot be split further.
+  return (body, none)
 }
 
 // Shows the first letter of the given content in a larger font.
