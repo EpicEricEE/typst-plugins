@@ -1,3 +1,27 @@
+// Regex for valid characters in front of the dropped capital.
+#let regex-before = regex({
+  "["
+    "\"'"    // Dumb quotes
+    "\p{C}"  // Control characters
+    "\p{Pi}" // Initial punctuation
+    "\p{Ps}" // Opening punctuation
+    "\p{Z}"  // Spaces and separators
+  "]+"
+})
+
+// Regex for valid characters behind the dropped capital.
+#let regex-after = regex({
+  "["
+    "\."     // Full stop
+    "'"      // Apostrophe
+    "\p{C}"  // Control characters
+    "\p{Pf}" // Final punctuation
+    "\p{Pe}" // Closing punctuation
+    "\p{Z}"  // Spaces and separators
+    "\p{M}"  // Combining marks
+  "]+"
+})
+
 // Element function for space.
 #let space = [ ].func()
 
@@ -53,6 +77,30 @@
   }
 }
 
+// Converts the given content to a string.
+#let to-string(body) = {
+  if type(body) == str {
+    body
+  } else if body.has("text") {
+    to-string(body.text)
+  } else if body.has("child") {
+    to-string(body.child)
+  } else if body.has("children") {
+    body.children.map(to-string).join()
+  } else if body.func() in splittable {
+    to-string(body.body)
+  } else if body.func() == smartquote {
+    // Unfortunately, we can only use "dumb" quotes here.
+    if body.double { "\"" } else { "'" }
+  } else if body.func() == enum.item {
+    str(body.number) + "."
+  } else if body.func() == space {
+    " "
+  } else {
+    ""
+  }
+}
+
 // Tries to extract the first letter of the given content.
 //
 // If the first letter cannot be extracted, the whole body is returned as rest.
@@ -82,6 +130,15 @@
     let func(it) = if it != none { body.func()(..fields, it) }
     let (letter, rest) = extract-first-letter(text)
     return attach-label((letter, func(rest)), label)
+  }
+
+  if body.func() == enum.item {
+    let (body, number) = body.fields()
+    return if number < 10 {
+      (str(number), "." + body)
+    } else {
+      (str(number).first(), str(number).slice(1) + "." + body)
+    }
   }
 
   if body.has("child") {
@@ -241,7 +298,25 @@
 ) = layout(bounds => style(styles => {  
   let (letter, rest) = if text-args.pos() == () {
     // Split body into first letter and rest of string.
-    extract-first-letter(body)
+    let (letter, rest) = extract-first-letter(body)
+
+    // Prepend valid characters before the first letter.
+    while to-string(letter).last().match(regex-before) != none {
+      let (next-letter, new-rest) = extract-first-letter(rest)
+      if next-letter == none { break }
+      letter += next-letter
+      rest = new-rest
+    }
+
+    // Append valid characters after the first letter.
+    let (next-letter, new-rest) = extract-first-letter(rest)
+    while next-letter != none and to-string(next-letter).match(regex-after) != none {
+      letter += next-letter
+      rest = new-rest
+      (next-letter, new-rest) = extract-first-letter(rest)
+    }
+
+    (letter, rest)
   } else {
     // First letter already given.
     (text-args.pos().first(), body)
