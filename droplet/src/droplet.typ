@@ -96,6 +96,7 @@
     })
 
     if child-pos == none {
+      // There is no letter to extract.
       return (none, body)
     }
 
@@ -106,6 +107,9 @@
     }
     return (letter, rest)
   }
+
+  // Element cannot be split further.
+  return (body, none)
 }
 
 // Gets the number of words in the given content.
