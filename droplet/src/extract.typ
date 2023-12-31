@@ -124,20 +124,24 @@
     return (none, body)
   }
 
-  // Append opening punctuation characters until the first "real" letter.
-  while to-string(letter).last().match(regex-before) != none {
-    let (next-letter, new-rest) = extract-first-letter(rest)
-    if next-letter == none { break }
-    letter += next-letter
-    rest = new-rest
-  }
+  // We can only append punctuation characters if the first letter can be
+  // converted to a string, but not if it's e.g. a 'box' or 'image'.
+  if to-string(letter) != none {
+    // Append opening punctuation characters until the first "real" letter.
+    while to-string(letter).last().match(regex-before) != none {
+      let (next-letter, new-rest) = extract-first-letter(rest)
+      if next-letter == none { break }
+      letter += next-letter
+      rest = new-rest
+    }
 
-  // Append closing punctuation characters.
-  let (next-letter, new-rest) = extract-first-letter(rest)
-  while next-letter != none and to-string(next-letter).match(regex-after) != none {
-    letter += next-letter
-    rest = new-rest
-    (next-letter, new-rest) = extract-first-letter(rest)
+    // Append closing punctuation characters.
+    let (next-letter, new-rest) = extract-first-letter(rest)
+    while next-letter != none and to-string(next-letter).match(regex-after) != none {
+      letter += next-letter
+      rest = new-rest
+      (next-letter, new-rest) = extract-first-letter(rest)
+    }
   }
 
   return (letter, rest)

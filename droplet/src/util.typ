@@ -27,8 +27,6 @@
     }
   } else if body.func() == space {
     " "
-  } else {
-    ""
   }
 }
 
