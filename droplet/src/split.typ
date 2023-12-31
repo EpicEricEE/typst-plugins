@@ -1,38 +1,47 @@
 #import "util.typ": attach-label, space, splittable
 
-// Gets the number of words in the given content.
-#let size(body) = {
+// Gets the number of breakpoints in the given content.
+//
+// A breakpoints must always be at a space. For example, the sequece
+//   ([Hello], [ ], [my world!])
+// has two breakpoints:
+//  1. ([Hello],) - ([my world!],)
+//  2. ([Hello my], [ ]) - ([world!],)
+//
+// Returns: The number of breakpoints.
+#let breakpoints(body) = {
   if type(body) == str {
-    body.split(" ").len()
+    body.split(" ").len() - 1
   } else if body.has("text") {
-    size(body.text)
+    breakpoints(body.text)
   } else if body.has("child") {
-    size(body.child)
+    breakpoints(body.child)
   } else if body.has("children") {
-    body.children.map(size).sum()
+    body.children.map(breakpoints).sum()
   } else if body.func() in splittable {
-    size(body.body)
+    breakpoints(body.body)
   } else if body.func() == space {
-    0
-  } else {
     1
+  } else {
+    0
   }
 }
 
-// Splits the given content at a given index.
+// Splits the given content at a given breakpoint index.
 //
-// Content is split at word boundaries. A sequence can be split at any of its
-// childrens' word boundaries. The index may not always be a valid word
-// boundary, in which case the content is split at the previous word boundary.
+// Content is split at spaces. A sequence can be split at any of its childrens'
+// breakpoints (spaces), but in general not between children.
 //
 // Returns: A tuple of the first and second part.
 #let split(body, index) = {
+  // Shortcut for out-of-bounds indices.
+  if index > breakpoints(body) {
+    return (body, none)
+  }
+
   // Handle string content.
   if type(body) == str {
     let words = body.split(" ")
-    if index >= words.len() {
-      return (body, none)
-    }
     let first = words.slice(0, index).join(" ")
     let second = words.slice(index).join(" ")
     return (first, second)
@@ -68,32 +77,25 @@
     let first = ()
     let second = ()
 
-    // Find child containing the splitting point and split it.
-    let new-index = index
+    // Find child containing the breakpoint and split it.
+    let sub-index = index
     for (i, child) in body.children.enumerate() {
-      let child-size = size(child)
-      new-index -= child-size
+      let child-breakpoints = breakpoints(child)
 
-      if new-index <= 0 {
-        // Current child contains splitting point.
-        let sub-index = child-size + new-index
-        let (child-first, child-second) = split(child, sub-index)
-
-        if child-second == none {
-          // Split is at the end of the child, so check if next child is space.
-          let next = body.children.at(i + 1, default: [ ])
-          if next.func() != space {
-            // Cannot split here, so split at previous break point.
-            return split(body, index - 1)
-          }
+      // Check if current child contains splitting point.
+      if sub-index <= child-breakpoints {
+        if child != [ ] {
+          // Push split child (skip trailing spaces)
+          let (child-first, child-second) = split(child, sub-index)
+          first.push(child-first)
+          second.push(child-second)
         }
 
-        first.push(child-first)
-        second.push(child-second)
         second += body.children.slice(i + 1)
         break
       }
 
+      sub-index -= child-breakpoints
       first.push(child)
     }
 
@@ -101,5 +103,5 @@
   }
 
   // Handle unbreakable content.
-  return (body, none)
+  return if index == 0 { (none, body) } else { (body, none) }
 }
