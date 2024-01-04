@@ -15,7 +15,7 @@
 #let regex-after = regex({
   "["
     "\."     // Full stop
-    "'"      // Apostrophe
+    "\"'"    // Dumb quotes / apostrophe
     "\p{C}"  // Control characters
     "\p{Pf}" // Final punctuation
     "\p{Pe}" // Closing punctuation
