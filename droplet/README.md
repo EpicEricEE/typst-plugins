@@ -12,19 +12,20 @@ The package comes with a single `dropcap` function that takes content and a few 
 | `hanging-indent` | The indent of lines after the first.                              | `0pt`   |
 | `overhang`       | The amount by which the first letter should hang into the margin. | `0pt`   |
 | `transform`      | A function to be applied to the first letter.                     | `none`  |
-| `..text-args`    | Named arguments to be passed to the text function.                      | `(:)`   |
+| `..text-args`    | Named arguments to be passed to the text function.                | `(:)`   |
 
 > [!NOTE]
 > Show and set rules applied inside the content passed to the `dropcap` function do not work!
 
 ```typ
-#import "@preview/droplet:0.1.0": dropcap
+#import "@preview/droplet:0.2.0": dropcap
 
 #dropcap(
   height: 3,
   justify: true,
   gap: 4pt,
   hanging-indent: 1em,
+  overhang: 8pt,
   font: "Curlz MT",
 )[
   *Typst* is a new markup-based typesetting system that is designed to be as
@@ -45,7 +46,7 @@ The package comes with a single `dropcap` function that takes content and a few 
 To further customize the appearance of the dropped capital, you can apply a `transform` function, which takes the first letter as a string and returns the content to be shown. The font size of the letter is then scaled so that the height of the transformed content matches the given height.
 
 ```typ
-#import "@preview/droplet:0.1.0": dropcap
+#import "@preview/droplet:0.2.0": dropcap
 
 #dropcap(
   height: 2,
