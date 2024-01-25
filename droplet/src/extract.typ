@@ -45,7 +45,8 @@
   // Handle text content.
   if body.has("text") {
     let (text, ..fields) = body.fields()
-    let label = if "label" in fields { fields.remove("label") }
+    if "label" in fields { fields.remove("label") }
+    let label = if body.has("label") { body.label }
     let func(it) = if it != none { body.func()(..fields, it) }
     let (letter, rest) = extract-first-letter(body.text)
     return attach-label((letter, func(rest)), label)
@@ -54,9 +55,20 @@
   // Handle content with "body" field.
   if body.func() in splittable {
     let (body: text, ..fields) = body.fields()
-    let label = if "label" in fields { fields.remove("label") }
+    if "label" in fields { fields.remove("label") }
+    let label = if body.has("label") { body.label }
     let func(it) = if it != none { body.func()(..fields, it) }
     let (letter, rest) = extract-first-letter(text)
+    return attach-label((letter, func(rest)), label)
+  }
+
+  // Handle styled content.
+  if body.has("child") {
+    let (child, styles, ..fields) = body.fields()
+    if "label" in fields { fields.remove("label") }
+    let label = if body.has("label") { body.label }
+    let func(it) = if it != none { body.func()(it, styles) }
+    let (letter, rest) = extract-first-letter(child)
     return attach-label((letter, func(rest)), label)
   }
 
@@ -76,13 +88,6 @@
   // Handle list items (interpreted as text, e.g. "- Body")
   if body.func() == list.item {
     return ("-", body.body)
-  }
-
-  // Handle styled content. Unfortunately, we cannot preserve the style
-  // information here, so it is dropped.
-  if body.has("child") {
-    let (letter, rest) = extract-first-letter(body.child)
-    return (letter, rest)
   }
 
   // Handle sequences.

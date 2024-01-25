@@ -50,7 +50,8 @@
   // Handle text content.
   if body.has("text") {
     let (text, ..fields) = body.fields()
-    let label = if "label" in fields { fields.remove("label") }
+    if "label" in fields { fields.remove("label") }
+    let label = if body.has("label") { body.label }
     let func(it) = if it != none { body.func()(..fields, it) }
     let (first, second) = split(text, index)
     return attach-label((func(first), func(second)), label)
@@ -59,17 +60,21 @@
   // Handle content with "body" field.
   if body.func() in splittable {
     let (body: text, ..fields) = body.fields()
-    let label = if "label" in fields { fields.remove("label") }
+    if "label" in fields { fields.remove("label") }
+    let label = if body.has("label") { body.label }
     let func(it) = if it != none { body.func()(..fields, it) }
     let (first, second) = split(text, index)
     return attach-label((func(first), func(second)), label)
   }
 
-  // Handle styled content. Unfortunately, we cannot preserve the style
-  // information here, so it is dropped.
+  // Handle styled content.
   if body.has("child") {
-    let (first, second) = split(body.child, index)
-    return (first, second)
+    let (child, styles, ..fields) = body.fields()
+    if "label" in fields { fields.remove("label") }
+    let label = if body.has("label") { body.label }
+    let func(it) = if it != none { body.func()(it, styles) }
+    let (first, second) = split(child, index)
+    return attach-label((func(first), func(second)), label)
   }
 
   // Handle sequences.

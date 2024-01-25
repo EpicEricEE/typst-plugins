@@ -14,9 +14,6 @@ The package comes with a single `dropcap` function that takes content and a few 
 | `transform`      | A function to be applied to the first letter.                     | `none`  |
 | `..text-args`    | Named arguments to be passed to the text function.                | `(:)`   |
 
-> [!NOTE]
-> Show and set rules applied inside the content passed to the `dropcap` function do not work!
-
 ```typ
 #import "@preview/droplet:0.2.0": dropcap
 
