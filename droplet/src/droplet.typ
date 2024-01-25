@@ -4,7 +4,9 @@
 // Sets the font size so the resulting text height matches the given height.
 //
 // If not specified otherwise in "text-args", the top and bottom edge of the
-// resulting text element will be set to "bounds".
+// resulting text element will be set to "bounds". If the given body does not
+// contain any text, the original body is returned with only the given
+// arguments applied.
 //
 // Parameters:
 // - height: The target height of the resulting text.
@@ -14,7 +16,7 @@
 //
 // Returns: The text with the set font size.
 #let sized(height, ..text-args, threshold: 0.1pt, body) = style(styles => {
-  let text = text.with(
+  let styled-text = text.with(
     top-edge: "bounds",
     bottom-edge: "bounds",
     ..text-args.named(),
@@ -22,15 +24,24 @@
   )
 
   let size = height
-  let font-height = measure(text(size: size), styles).height
+  let font-height = measure(styled-text(size: size), styles).height
 
   // This should only take one iteration, but just in case...
-  while calc.abs(font-height - height) > threshold {
+  let i = 0
+  while font-height > 0pt and i < 100 and calc.abs(font-height - height) > threshold {
     size *= 1 + (height - font-height) / font-height
-    font-height = measure(text(size: size), styles).height
+    font-height = measure(styled-text(size: size), styles).height
+    i += 1
   }
 
-  return text(size: size)
+  return if i < 100 {
+    styled-text(size: size)
+  } else {
+    // Font size calculation did not converge, as there is probably no text
+    // that can be set to the given height. Return the original text instead,
+    // with only the given arguments applied.
+    text(..text-args.named(), body)
+  }
 })
 
 // Shows the first letter of the given content in a larger font.
@@ -82,7 +93,10 @@
   }
 
   // Create dropcap with the height of sample content.
-  let letter = sized(letter-height, letter, ..text-args.named())
+  let letter = box(
+    height: letter-height,
+    sized(letter-height, letter, ..text-args.named())
+  )
   let letter-width = measure(letter, styles).width
 
   // Resolve overhang if given as percentage.
