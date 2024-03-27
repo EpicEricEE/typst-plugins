@@ -15,7 +15,7 @@
 // - body: The content of the text element.
 //
 // Returns: The text with the set font size.
-#let sized(height, ..text-args, threshold: 0.1pt, body) = style(styles => {
+#let sized(height, ..text-args, threshold: 0.1pt, body) = context {
   let styled-text = text.with(
     top-edge: "bounds",
     bottom-edge: "bounds",
@@ -24,13 +24,13 @@
   )
 
   let size = height
-  let font-height = measure(styled-text(size: size), styles).height
+  let font-height = measure(styled-text(size: size)).height
 
   // This should only take one iteration, but just in case...
   let i = 0
   while font-height > 0pt and i < 100 and calc.abs(font-height - height) > threshold {
     size *= 1 + (height - font-height) / font-height
-    font-height = measure(styled-text(size: size), styles).height
+    font-height = measure(styled-text(size: size)).height
     i += 1
   }
 
@@ -42,7 +42,7 @@
     // with only the given arguments applied.
     text(..text-args.named(), body)
   }
-})
+}
 
 // Shows the first letter of the given content in a larger font.
 //
@@ -65,14 +65,14 @@
 // Returns: The content with the first letter shown in a larger font.
 #let dropcap(
   height: 2,
-  justify: false,
+  justify: auto,
   gap: 0pt,
   hanging-indent: 0pt,
   overhang: 0pt,
   transform: none,
   ..text-args,
   body
-) = layout(bounds => style(styles => {  
+) = layout(bounds => context {  
   let (letter, rest) = if text-args.pos() == () {
     extract(body)
   } else {
@@ -87,9 +87,9 @@
   let letter-height = if type(height) == int {
     // Create dummy content to convert line count to height.
     let sample-lines = range(height).map(_ => [x]).join(linebreak())
-    measure(sample-lines, styles).height
+    measure(sample-lines).height
   } else {
-    measure(v(height), styles).height
+    height.to-absolute()
   }
 
   // Create dropcap with the height of sample content.
@@ -97,7 +97,7 @@
     height: letter-height,
     sized(letter-height, letter, ..text-args.named())
   )
-  let letter-width = measure(letter, styles).width
+  let letter-width = measure(letter).width
 
   // Resolve overhang if given as percentage.
   let overhang = if type(overhang) == ratio {
@@ -107,6 +107,9 @@
   } else {
     overhang
   }
+
+  // Resolve justify if given as auto.
+  let justify = if justify == auto { par.justify } else { justify }
 
   // Try to justify as many words as possible next to dropcap.
   let bounded = box.with(width: bounds.width - letter-width - gap + overhang)
@@ -126,8 +129,8 @@
     }
 
     // Allow a bit more space to accommodate for larger elements.
-    let max-height = letter-height + measure([x], styles).height / 2
-    let height = measure(bounded(first), styles).height    
+    let max-height = letter-height + measure[x].height / 2
+    let height = measure(bounded(first)).height    
     if height > max-height {
       split(rest, index - 1)
       break
@@ -152,4 +155,4 @@
 
   linebreak()
   second
-}))
+})
