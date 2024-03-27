@@ -7,3 +7,4 @@ license = "MIT"
 description = "Encoder and decoder for base64, base32, and base16."
 repository = "https://github.com/EpicEricEE/typst-plugins"
 exclude = ["README.md", "assets", "test"]
+category = "scripting"
