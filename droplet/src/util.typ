@@ -46,3 +46,10 @@
     (none, none)
   }
 }
+
+// Returns whether the element is displayed inline.
+//
+// Requires context.
+#let inline(element) = {
+  measure(box(width: 0.1pt) + element).width > measure(element).width
+}

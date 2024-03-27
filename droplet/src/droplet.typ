@@ -1,5 +1,6 @@
 #import "extract.typ": extract
 #import "split.typ": split
+#import "util.typ": inline
 
 // Sets the font size so the resulting text height matches the given height.
 //
@@ -115,6 +116,7 @@
   let bounded = box.with(width: bounds.width - letter-width - gap + overhang)
 
   let index = 1
+  let top-position = 0pt
   let (first, second) = while true {
     let (first, second) = split(rest, index)
     let first = {
@@ -122,37 +124,48 @@
       first
     }
 
+    let new = split(first, -1).at(1)
+    top-position = calc.max(
+      top-position,
+      measure(bounded(first)).height - measure(new).height - par.leading.to-absolute()
+    )
+
+    if top-position >= letter-height {
+      // Limit reached, new element doesn't fit anymore
+      split(rest, index - 1)
+      break
+    }
+
     if second == none {
       // All content fits next to dropcap.
       (first, none)
       break
     }
-
-    // Allow a bit more space to accommodate for larger elements.
-    let max-height = letter-height + measure[x].height / 2
-    let height = measure(bounded(first)).height    
-    if height > max-height {
-      split(rest, index - 1)
-      break
-    }
-
+    
     index += 1
   }
 
   // Layout dropcap and aside text as grid.
   set par(justify: justify)
 
-  box(grid(
+  let last-of-first-inline = inline(split(first, -1).at(1))
+  let first-of-second-inline = second != none and inline(split(second, 1).at(0))
+  let func = if last-of-first-inline { box } else { block }
+
+  func(grid(
     column-gutter: gap,
     columns: (letter-width - overhang, 1fr),
     move(dx: -overhang, letter),
     {
       set par(hanging-indent: hanging-indent)
       first
-      if second != none { linebreak(justify: justify) }
+      
+      if last-of-first-inline and first-of-second-inline {
+        linebreak(justify: justify)
+      } 
     }
   ))
 
-  linebreak()
+  if func == box { linebreak() }
   second
 })

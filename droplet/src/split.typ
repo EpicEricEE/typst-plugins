@@ -39,6 +39,10 @@
     return (body, none)
   }
 
+  if index < 0 {
+    return split(body, calc.max(0, breakpoints(body) + index + 1))
+  }
+
   // Handle string content.
   if type(body) == str {
     let words = body.split(" ")
