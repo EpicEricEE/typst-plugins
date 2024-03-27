@@ -1,5 +1,6 @@
 #import "../src/lib.typ": dropcap
 
+#set par(justify: true)
 #set text(size: 14pt)
 #set page(
   width: 11cm + 16pt,
@@ -15,7 +16,6 @@
 
 #dropcap(
   height: 3,
-  justify: true,
   gap: 4pt,
   hanging-indent: 1em,
   overhang: 8pt,

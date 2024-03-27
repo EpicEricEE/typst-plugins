@@ -7,7 +7,7 @@ The package comes with a single `dropcap` function that takes content and a few 
 | Parameter        | Description                                                       | Default |
 |------------------|-------------------------------------------------------------------|---------|
 | `height`         | The height of the dropped capital in lines or as length.          | `2`     |
-| `justify`        | Whether the text should be justified.                             | `false` |
+| `justify`        | Whether the text should be justified.                             | `auto` |
 | `gap`            | The space between the first letter and the text.                  | `0pt`   |
 | `hanging-indent` | The indent of lines after the first.                              | `0pt`   |
 | `overhang`       | The amount by which the first letter should hang into the margin. | `0pt`   |
@@ -17,9 +17,10 @@ The package comes with a single `dropcap` function that takes content and a few 
 ```typ
 #import "@preview/droplet:0.2.0": dropcap
 
+#set par(justify: true)
+
 #dropcap(
   height: 3,
-  justify: true,
   gap: 4pt,
   hanging-indent: 1em,
   overhang: 8pt,
