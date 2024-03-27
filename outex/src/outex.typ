@@ -88,7 +88,10 @@
       state.number-widths.at(str(level), default: 0pt)
     }).sum(default: 0pt)
 
-    let number-width = state.number-widths.at(level)
+    let number-width = if el.numbering == none { 0pt } else {
+      state.number-widths.at(level)
+    }
+
     let page-width = state.page-width
     let fill = if el.level > 1 { entry.fill }
 

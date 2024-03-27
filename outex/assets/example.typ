@@ -43,4 +43,4 @@
 
 = Conclusion
 
-= References
+#heading(numbering: none, [References])
