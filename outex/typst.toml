@@ -2,6 +2,7 @@
 name = "outex"
 version = "0.1.0"
 entrypoint = "src/lib.typ"
+compiler = "0.11.0"
 authors = ["Eric Biedert"]
 license = "MIT"
 description = "Outlines styled like in LaTeX."

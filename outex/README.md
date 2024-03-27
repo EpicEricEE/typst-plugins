@@ -18,8 +18,8 @@ The package also comes with a custom `repeat` function to allow for easier custo
 
 #set heading(numbering: "1.1 i")
 
-#show outline: outex
 #show heading: set block(below: 1em)
+#show: outex
 
 #outline(title: "Table of Contents")
 

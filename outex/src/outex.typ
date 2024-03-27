@@ -9,9 +9,9 @@
   gap: none,
   justify: false,
   body
-) = layout(size => style(styles => {
-  let pt(length) = measure(h(length), styles).width
-  let width = measure(body, styles).width
+) = layout(size => context {
+  let pt(length) = length.to-absolute()
+  let width = measure(body).width
   let amount = calc.floor(pt(size.width + gap) / pt(width + gap))
 
   let gap = if not justify { gap } else {
@@ -24,7 +24,7 @@
   }
 
   items.join()
-}))
+})
 
 // Layout a heading entry in an outline.
 //
@@ -36,7 +36,7 @@
 // - space: Whether to add block-spacing before fist-level titles.
 //
 // Returns: The styled entry.
-#let heading-entry(entry, gap, fill-pad, bold, space) = style(styles => {
+#let heading-entry(entry, gap, fill-pad, bold, space) = context {
   let el = entry.element
   let level = str(el.level)
   
@@ -50,8 +50,8 @@
     numbering(page-numbering, ..counter(page).at(el.location()))
   }
 
-  let number-width = measure(number + h(gap), styles).width
-  let page-width = measure(page, styles).width
+  let number-width = measure(number + h(gap)).width
+  let page-width = measure(page).width
   
   // Keep track of the maximum widths of the numbering and page.
   let state = state("outex:0.1.0/heading", (
@@ -82,8 +82,9 @@
   let title = linked(el.body)
   let page = linked(page)
 
-  locate(loc => {
-    let state = state.final(loc)
+  // Render with final state
+  context {
+    let state = state.final()
     let indent = range(1, el.level).map(level => {
       state.number-widths.at(str(level), default: 0pt)
     }).sum(default: 0pt)
@@ -105,10 +106,10 @@
         right: fill-pad.right,
         title + box(width: 1fr, pad(left: fill-pad.left, fill))
       ),
-      align(bottom+end, page)
+      align(bottom + end, page)
     ))
-  })
-})
+  }
+}
 
 // Layout a figure entry in an outline.
 //
@@ -118,11 +119,11 @@
 // - fill-pad: A dict (left, right) of the padding around the "fill" line.
 //
 // Returns: The styled entry.
-#let figure-entry(entry, gap, fill-pad) = style(styles => {
+#let figure-entry(entry, gap, fill-pad) = context {
   let el = entry.element
   
   let number = if el.numbering != none {
-    locate(loc => numbering(el.numbering, ..el.counter.at(el.location())))
+    numbering(el.numbering, ..el.counter.at(el.location()))
   }
 
   let page = {
@@ -131,8 +132,8 @@
     numbering(page-numbering, el.location().page())
   }
 
-  let number-width = measure(number, styles).width
-  let page-width = measure(page, styles).width
+  let number-width = measure(number).width
+  let page-width = measure(page).width
   
   // Keep track of the maximum widths of the numbering and page.
   let state = state("outex:0.1.0/figure/" + repr(el.kind), (
@@ -151,8 +152,9 @@
   let title = linked(el.caption.body)
   let page = linked(page)
 
-  locate(loc => {
-    let state = state.final(loc)
+  // Render with final state
+  context {
+    let state = state.final()
     let number-width = state.number-width
     let page-width = state.page-width
 
@@ -164,10 +166,10 @@
         right: fill-pad.right,
         title + box(width: 1fr, pad(left: fill-pad.left, entry.fill))
       ),
-      align(bottom+end, page)
+      align(bottom + end, page)
     ))
-  })
-})
+  }
+}
 
 // Template to apply for a LaTeX styled outline.
 //
