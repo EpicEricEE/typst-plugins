@@ -27,6 +27,45 @@
     }
   } else if body.func() == space {
     " "
+  } else if body.func() == super {
+    let body-string = to-string(body.body)
+    if body-string.match(regex("^[0-9+\-=\(\)ni\s]+$")) != none {
+      body-string
+        .replace("1", "¹")
+        .replace("2", "²")
+        .replace("3", "³")
+        .replace(regex("[04-9]"), it => str.from-unicode(0x2070 + int(it.text)))
+        .replace("+", "\u{207A}")
+        .replace("-", "\u{207B}")
+        .replace("=", "\u{207C}")
+        .replace("(", "\u{207D}")
+        .replace(")", "\u{207E}")
+        .replace("n", "\u{207F}")
+        .replace("i", "\u{2071}")
+    }
+  } else if body.func() == sub {
+    let body-string = to-string(body.body)
+    if body-string.match(regex("^[0-9+\-=\(\)aehk-pstx\s]+$")) != none {
+      body-string
+        .replace(regex("[0-9]"), it => str.from-unicode(0x2080 + int(it.text)))
+        .replace("+", "\u{208A}")
+        .replace("-", "\u{208B}")
+        .replace("=", "\u{208C}")
+        .replace("(", "\u{208D}")
+        .replace(")", "\u{208E}")
+        .replace("a", "\u{2090}")
+        .replace("e", "\u{2091}")
+        .replace("o", "\u{2092}")
+        .replace("x", "\u{2093}")
+        .replace("h", "\u{2095}")
+        .replace("k", "\u{2096}")
+        .replace("l", "\u{2097}")
+        .replace("m", "\u{2098}")
+        .replace("n", "\u{2099}")
+        .replace("p", "\u{209A}")
+        .replace("s", "\u{209B}")
+        .replace("t", "\u{209C}")
+    }
   }
 }
 

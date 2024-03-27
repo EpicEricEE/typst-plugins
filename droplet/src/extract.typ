@@ -3,24 +3,26 @@
 // Regex for valid characters in front of the dropped capital.
 #let regex-before = regex({
   "["
-    "\"'"    // Dumb quotes
-    "\p{C}"  // Control characters
-    "\p{Pi}" // Initial punctuation
-    "\p{Ps}" // Opening punctuation
-    "\p{Z}"  // Spaces and separators
+    "\"'"              // Dumb quotes
+    "\p{C}"            // Control characters
+    "\p{Pi}"           // Initial punctuation
+    "\p{Ps}"           // Opening punctuation
+    "\p{Z}"            // Spaces and separators
+    "¹²³\u2070-\u209F" // Superscripts and subscripts
   "]+"
 })
 
 // Regex for valid characters behind the dropped capital.
 #let regex-after = regex({
   "["
-    "\."     // Full stop
-    "\"'"    // Dumb quotes / apostrophe
-    "\p{C}"  // Control characters
-    "\p{Pf}" // Final punctuation
-    "\p{Pe}" // Closing punctuation
-    "\p{Z}"  // Spaces and separators
-    "\p{M}"  // Combining marks
+    "\."               // Full stop
+    "\"'"              // Dumb quotes / apostrophe
+    "\p{C}"            // Control characters
+    "\p{Pf}"           // Final punctuation
+    "\p{Pe}"           // Closing punctuation
+    "\p{Z}"            // Spaces and separators
+    "\p{M}"            // Combining marks
+    "¹²³\u2070-\u209F" // Superscripts and subscripts
   "]+"
 })
 
