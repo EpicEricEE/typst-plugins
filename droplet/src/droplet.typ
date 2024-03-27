@@ -45,6 +45,23 @@
   }
 }
 
+// Resolves the given height to an absolute length.
+//
+// Height can be given as an integer, which is interpreted as the number of
+// lines, or as a length.
+//
+// Requires context.
+#let resolve-height(height) = {
+  if type(height) == int {
+    // Create dummy content to convert line count to height.
+    let sample-lines = range(height).map(_ => [x]).join(linebreak())
+    measure(sample-lines).height
+  } else {
+    height.to-absolute()
+  }
+
+}
+
 // Shows the first letter of the given content in a larger font.
 //
 // If the first letter is not given as a positional argument, it is extracted
@@ -59,6 +76,8 @@
 // - hanging-indent: The indent of lines after the first line.
 // - overhang: The amount by which the first letter should overhang into the
 //             margin. Ratios are relative to the width of the first letter.
+// - depth: The minimum space below the first letter. Can be given as the
+//          number of lines (integer) or as a length.
 // - transform: A function to be applied to the first letter.
 // - text-args: Named arguments to be passed to the underlying text element.
 // - body: The content to be shown.
@@ -70,6 +89,7 @@
   gap: 0pt,
   hanging-indent: 0pt,
   overhang: 0pt,
+  depth: 0pt,
   transform: none,
   ..text-args,
   body
@@ -85,17 +105,12 @@
     letter = transform(letter)
   }
 
-  let letter-height = if type(height) == int {
-    // Create dummy content to convert line count to height.
-    let sample-lines = range(height).map(_ => [x]).join(linebreak())
-    measure(sample-lines).height
-  } else {
-    height.to-absolute()
-  }
+  let letter-height = resolve-height(height)
+  let depth = resolve-height(depth)
 
   // Create dropcap with the height of sample content.
   let letter = box(
-    height: letter-height,
+    height: letter-height + depth,
     sized(letter-height, letter, ..text-args.named())
   )
   let letter-width = measure(letter).width
@@ -130,7 +145,7 @@
       measure(bounded(first)).height - measure(new).height - par.leading.to-absolute()
     )
 
-    if top-position >= letter-height {
+    if top-position >= letter-height + depth {
       // Limit reached, new element doesn't fit anymore
       split(rest, index - 1)
       break
