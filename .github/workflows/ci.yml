@@ -1,0 +1,46 @@
+name: Tests
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  ci:
+    name: Test "${{ matrix.package }}"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        package:
+          - based
+          - droplet
+          - equate
+          - quick-maths
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Probe runner package cache
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: cargo
+          version: 1.0
+
+      - name: Install typst-test from GitHub
+        uses: baptiste0928/cargo-install@v3
+        with:
+          crate: typst-test
+          git: https://github.com/tingerrr/typst-test.git
+          branch: ci-semi-stable
+
+      - name: Setup typst
+        uses: typst-community/setup-typst@v3
+
+      - name: Run test suite
+        working-directory: ${{ matrix.package }}
+        run: typst-test run
