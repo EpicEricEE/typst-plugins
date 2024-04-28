@@ -17,10 +17,10 @@
   } else if body.has("child") {
     breakpoints(body.child)
   } else if body.has("children") {
-    body.children.map(breakpoints).sum()
+    body.children.map(breakpoints).sum(default: 0)
   } else if body.func() in splittable {
     breakpoints(body.body)
-  } else if body.func() == space {
+  } else if body.func() in (space, linebreak, parbreak) {
     1
   } else {
     0
@@ -93,7 +93,7 @@
 
       // Check if current child contains splitting point.
       if sub-index <= child-breakpoints {
-        if child != [ ] {
+        if child.func() not in (space, linebreak, parbreak) {
           // Push split child (skip trailing spaces)
           let (child-first, child-second) = split(child, sub-index)
           first.push(child-first)
