@@ -93,7 +93,7 @@
   transform: none,
   ..text-args,
   body
-) = layout(bounds => context {  
+) = layout(bounds => context {
   let (letter, rest) = if text-args.pos() == () {
     extract(body)
   } else {
@@ -132,6 +132,7 @@
 
   let index = 1
   let top-position = 0pt
+  let prev-height = 0pt
   let (first, second) = while true {
     let (first, second) = split(rest, index)
     let first = {
@@ -139,13 +140,14 @@
       first
     }
 
+    let height = measure(bounded(first)).height
     let new = split(first, -1).at(1)
     top-position = calc.max(
       top-position,
-      measure(bounded(first)).height - measure(new).height - par.leading.to-absolute()
+      height - measure(new).height - par.leading.to-absolute()
     )
 
-    if top-position >= letter-height + depth {
+    if top-position >= letter-height + depth and height > prev-height {
       // Limit reached, new element doesn't fit anymore
       split(rest, index - 1)
       break
@@ -156,8 +158,9 @@
       (first, none)
       break
     }
-    
+
     index += 1
+    prev-height = height
   }
 
   // Layout dropcap and aside text as grid.
