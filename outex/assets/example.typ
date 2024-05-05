@@ -11,6 +11,7 @@
     height: 100%,
     radius: 4pt,
     fill: white,
+    stroke: white.darken(10%),
   ),
 )
 

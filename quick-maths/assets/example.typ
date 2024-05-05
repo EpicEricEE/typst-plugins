@@ -5,12 +5,13 @@
   width: 8cm,
   height: auto,
   margin: 1em,
-  background: box(
+  background: pad(0.5pt, box(
     width: 100%,
     height: 100%,
     radius: 4pt,
     fill: white,
-  ),
+    stroke: white.darken(10%),
+  )),
 )
 
 #show: shorthands.with(

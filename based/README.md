@@ -16,6 +16,8 @@ You can encode strings, arrays and bytes. The `encode` function will return a st
 
 #table(
   columns: 3,
+  
+  table.header[*Base64*][*Base32*][*Base16*],
 
   raw(base64.encode("Hello world!")),
   raw(base32.encode("Hello world!")),

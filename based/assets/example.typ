@@ -5,16 +5,20 @@
   width: auto,
   height: auto,
   margin: 1em,
-  background: box(
+  background: pad(0.5pt, box(
     width: 100%,
     height: 100%,
     radius: 4pt,
     fill: white,
-  ),
+    stroke: white.darken(10%),
+  )),
 )
 
 #table(
   columns: 3,
+  inset: 0.5em,
+
+  table.header[*Base64*][*Base32*][*Base16*],
 
   raw(base64.encode("Hello world!")),
   raw(base32.encode("Hello world!")),

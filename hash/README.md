@@ -168,16 +168,17 @@ The data to hash.
 #table(
   columns: 2,
   
-  [*Algorithm*], [*Hash*],
-  [BLAKE2],      hex(hash("blake2", "Hello world!")),
-  [BLAKE2s],     hex(hash("blake2s", "Hello world!")),
-  [MD5],         hex(md5("Hello world!")),
-  [SHA-1],       hex(hash("sha1", "Hello world!")),
-  [SHA-224],     hex(hash("sha224", "Hello world!")),
-  [SHA-256],     hex(sha256("Hello world!")),
-  [SHA-384],     hex(hash("sha384", "Hello world!")),
-  [SHA-512],     hex(hash("sha512", "Hello world!")),
-  [SHA-3],       hex(sha3("Hello world!")),
+  table.header[*Digest*][*Hash*],
+    
+  [BLAKE2],  hex(hash("blake2", "Hello world!")),
+  [BLAKE2s], hex(hash("blake2s", "Hello world!")),
+  [MD5],     hex(md5("Hello world!")),
+  [SHA-1],   hex(hash("sha1", "Hello world!")),
+  [SHA-224], hex(hash("sha224", "Hello world!")),
+  [SHA-256], hex(sha256("Hello world!")),
+  [SHA-384], hex(hash("sha384", "Hello world!")),
+  [SHA-512], hex(hash("sha512", "Hello world!")),
+  [SHA-3],   hex(sha3("Hello world!")),
 )
 ```
 

@@ -73,10 +73,10 @@ Default: `"cover"`
 #table(
   columns: 2,
   
-  [*Data*],        [*QR code*],
-  [Hello world!],  qr.create("Hello world!", margin: 0),
-  [Hallo Welt!],   qr.create("Hallo Welt!", fill: blue, margin: 2),
-  [#(1, 2, 3, 4)], box(fill: yellow, qr.create((1, 2, 3, 4))),
+  [*Data*],        [*QR Code*],
+  [Hello world!],  qr.create("Hello world!", margin: 0, width: 100%),
+  [Hallo Welt!],   qr.create("Hallo Welt!", fill: blue, width: 100%),
+  [#(1, 2, 3, 4)], box(fill: yellow, qr.create((1, 2, 3, 4), width: 100%)),
 )
 ```
 
