@@ -6,7 +6,7 @@ This repository contains my packages for [Typst](https://github.com/typst/typst)
 |-----------------------------|----------------|-----------------------------------------------------|
 | [based](based/)             | 0.1.0 [:link:] | Encoder and decoder for base64, base32, and base16. |
 | [droplet](droplet/)         | 0.2.0 [:link:] | Customizable dropped capitals.                      |
-| [equate](equate/)           | 0.1.0 [:link:] | Breakable equations with improved numbering.        |
+| [equate](equate/)           | 0.2.0 [:link:] | Breakable equations with improved numbering.        |
 | [hash](hash/)               | 0.1.0          | Implementation of multiple hashing algorithms.      |
 | [outex](outex/)             | 0.1.0          | Outlines styled like in LaTeX.                      |
 | [qr](qr/)                   | 0.1.0          | Fast QR Code generator.                             |
