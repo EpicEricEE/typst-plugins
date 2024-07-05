@@ -1,5 +1,14 @@
 # typst-plugins
 
+> [!WARNING]
+> This repository has been archived. Packages published to the Typst Universe have been moved to their own repositories:
+> - [EpicEricEE/typst-based](https://github.com/EpicEricEE/typst-based)
+> - [EpicEricEE/typst-droplet](https://github.com/EpicEricEE/typst-droplet)
+> - [EpicEricEE/typst-equate](https://github.com/EpicEricEE/typst-equate)
+> - [EpicEricEE/typst-quick-maths](https://github.com/EpicEricEE/typst-quick-maths)
+>
+> The packages are still available in the `@preview` namespace.
+
 This repository contains my packages for [Typst](https://github.com/typst/typst). More information about each of the packages can be found in their respective directories.
 
 | Name                        | Version        | Description                                         |

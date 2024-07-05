@@ -1,6 +1,9 @@
 # quick-maths
 A package for creating custom shorthands for math equations.
 
+> [!WARNING]
+> This repository has been archived. The package has been moved to the [EpicEricEE/typst-quick-maths](https://github.com/EpicEricEE/typst-quick-maths) repository.
+
 ## Usage
 The package comes with a single template function `shorthands` that takes one or more tuples of the form `(shorthand, replacement)`, where `shorthand` can be a string or content.
 

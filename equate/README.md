@@ -1,6 +1,9 @@
 # equate
 A package for improved layout of equations and mathematical expressions.
 
+> [!WARNING]
+> This repository has been archived. The package has been moved to the [EpicEricEE/typst-equate](https://github.com/EpicEricEE/typst-equate) repository.
+
 When applied, this package will split up multi-line block equations into multiple elements, so that each line can be assigned a separate number. By default, the equation counter is incremented for each line, but this behavior can be changed by setting the `sub-numbering` argument to `true`. In this case, the equation counter will only be incremented once for the entire block, and each line will be assigned a sub-number like `1a`, `2.1`, or similar, depending on the set equation numbering. You can also set the `number-mode` argument to `"label"` to only number labelled lines. If a label is only applied to the full equation, all lines will be numbered.
 
 This splitting also makes it possible to spread equations over page boundaries while keeping alignment in place, which can be useful for long derivations or proofs. This can be configured by the `breakable` parameter of the `equate` function, or by setting the `breakable` parameter of `block` for equations via a show-set rule. Additionally, the alignment of the equation number is improved, so that it always matches the baseline of the equation.

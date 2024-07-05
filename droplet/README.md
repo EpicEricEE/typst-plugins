@@ -1,6 +1,9 @@
 # droplet
 A package for creating dropped capitals in typst.
 
+> [!WARNING]
+> This repository has been archived. The package has been moved to the [EpicEricEE/typst-droplet](https://github.com/EpicEricEE/typst-droplet) repository.
+
 ## Usage
 The package comes with a single `dropcap` function that takes content and a few optional parameters. The first letter can either be passed as a positional parameter, or is automatically extracted from the passed body. The rest of the content will be wrapped around the dropped capital by splitting it into two paragraphs. The parameters are as follows:
 

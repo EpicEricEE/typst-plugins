@@ -1,6 +1,9 @@
 # based
 A package for encoding and decoding in base64, base32, and base16.
 
+> [!WARNING]
+> This repository has been archived. The package has been moved to the [EpicEricEE/typst-based](https://github.com/EpicEricEE/typst-based) repository.
+
 ## Usage
 The package comes with three submodules: `base64`, `base32`, and `base16`. All of them have an `encode` and `decode` function. The package also provides the function aliases
 - `encode64` / `decode64`,
